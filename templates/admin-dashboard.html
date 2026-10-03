@@ -1,0 +1,687 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Admin Dashboard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Administrator: {{ user.email }}
+            </span>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- LAYOUT -->
+    <!-- ================================================== -->
+
+    <div class="dashboard-container">
+
+
+        <!-- ================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ================================================== -->
+
+        <aside class="sidebar">
+
+
+            <a
+                href="/admin-dashboard/"
+                class="active"
+            >
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/admin-policyholders/">
+                <span class="sidebar-icon">◯</span>
+                <span>Policyholders</span>
+            </a>
+
+
+            <a href="/admin-officers/">
+                <span class="sidebar-icon">▣</span>
+                <span>Insurance Officers</span>
+            </a>
+
+
+            <a href="/admin-insurance-plans/">
+                <span class="sidebar-icon">▤</span>
+                <span>Insurance Plans</span>
+            </a>
+
+
+            <a href="/admin-claims/">
+                <span class="sidebar-icon">▦</span>
+                <span>Claims</span>
+            </a>
+
+
+            <a href="/admin-reports/">
+                <span class="sidebar-icon">▥</span>
+                <span>Reports</span>
+            </a>
+
+            <a href="/profile/">
+                <span class="sidebar-icon">◉</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="/logout/"
+                class="sidebar-logout"
+            >
+                <span class="sidebar-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+
+
+        <!-- ================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================== -->
+
+        <main class="dashboard-main admin-dashboard-page">
+
+
+            <!-- ================================================== -->
+            <!-- PAGE HEADER -->
+            <!-- ================================================== -->
+
+            <div class="admin-dashboard-header">
+
+                <div>
+
+                    <div class="admin-dashboard-eyebrow">
+                        ADMIN DASHBOARD
+                    </div>
+
+                    <h1>
+                        Administrator Dashboard
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        Monitor and manage the ClaimIntel system.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- STATISTICS -->
+            <!-- ================================================== -->
+
+            <div class="admin-stat-grid">
+
+
+                <!-- Total Users -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon blue">
+                        ◯
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Total Users
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ total_users }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Officers -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon purple">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Claim Officers
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ total_officers }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Insurance Plans -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon green">
+                        ▤
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Insurance Plans
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ total_plans }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Total Claims -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon blue">
+                        ▦
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Total Claims
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ total_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Pending Claims -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon orange">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Pending Claims
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ pending_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- SYSTEM OVERVIEW -->
+            <!-- ================================================== -->
+
+            <div class="admin-overview-card">
+
+
+                <div class="admin-overview-content">
+
+                    <div class="admin-overview-icon">
+                        ◈
+                    </div>
+
+                    <div>
+
+                        <div class="admin-overview-eyebrow">
+                            SYSTEM OVERVIEW
+                        </div>
+
+                        <h2>
+                            Monitor ClaimIntel activity
+                        </h2>
+
+                        <p>
+                            Monitor users, claims, officers,
+                            insurance plans, and system activity
+                            from one place.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <a
+                    href="/admin-reports/"
+                    class="admin-overview-button"
+                >
+                    View Reports →
+                </a>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- RECENT CLAIMS -->
+            <!-- ================================================== -->
+
+            <div class="admin-content-card">
+
+
+                <div class="admin-content-header">
+
+                    <div>
+
+                        <div class="admin-section-icon blue">
+                            ▦
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Recent Claims
+                        </h2>
+
+                        <p>
+                            Latest claims submitted through ClaimIntel.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                {% if recent_claims %}
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Claim ID
+                                    </th>
+
+                                    <th>
+                                        Policyholder
+                                    </th>
+
+                                    <th>
+                                        Vehicle
+                                    </th>
+
+                                    <th>
+                                        Date
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                {% for claim in recent_claims %}
+
+
+                                    <tr>
+
+
+                                        <!-- Claim ID -->
+
+                                        <td>
+
+                                            <div class="admin-claim-id">
+
+                                                <span>
+                                                    #
+                                                </span>
+
+                                                <strong>
+                                                    {{ claim.claim_id }}
+                                                </strong>
+
+                                            </div>
+
+                                        </td>
+
+
+
+                                        <!-- Policyholder -->
+
+                                        <td>
+
+                                            <div class="admin-user-cell">
+
+                                                <span>
+                                                    ◯
+                                                </span>
+
+                                                {{ claim.policyholder.email }}
+
+                                            </div>
+
+                                        </td>
+
+
+
+                                        <!-- Vehicle -->
+
+                                        <td>
+
+                                            <div class="admin-vehicle-cell">
+
+                                                <span>
+                                                    🚗
+                                                </span>
+
+                                                {{ claim.vehicle_make }}
+                                                {{ claim.vehicle_model }}
+
+                                            </div>
+
+                                        </td>
+
+
+
+                                        <!-- Date -->
+
+                                        <td>
+
+                                            <span class="admin-date-cell">
+                                                {{ claim.incident_date|date:"d M Y" }}
+                                            </span>
+
+                                        </td>
+
+
+
+                                        <!-- Status -->
+
+                                        <td>
+
+
+                                            {% if claim.status == 'under_review' %}
+
+                                                <span class="status pending">
+                                                    Under Review
+                                                </span>
+
+
+                                            {% elif claim.status == 'approved' %}
+
+                                                <span class="status approved">
+                                                    Approved
+                                                </span>
+
+
+                                            {% elif claim.status == 'rejected' %}
+
+                                                <span class="status rejected">
+                                                    Rejected
+                                                </span>
+
+
+                                            {% elif claim.status == 'investigation' %}
+
+                                                <span class="status investigation">
+                                                    Investigation
+                                                </span>
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <div class="admin-empty-state">
+
+                        <div class="admin-empty-icon">
+                            ▦
+                        </div>
+
+                        <h3>
+                            No Claims Yet
+                        </h3>
+
+                        <p>
+                            No claims have been submitted yet.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- QUICK ACTIONS -->
+            <!-- ================================================== -->
+
+            <div class="admin-quick-section">
+
+
+                <div class="admin-quick-header">
+
+                    <div>
+
+                        <div class="admin-dashboard-eyebrow">
+                            ADMIN TOOLS
+                        </div>
+
+                        <h2>
+                            Quick Actions
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="admin-quick-grid">
+
+
+                    <a
+                        href="/admin-policyholders/"
+                        class="admin-quick-card"
+                    >
+
+                        <div class="admin-quick-icon blue">
+                            ◯
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Manage Policyholders
+                            </strong>
+
+                            <span>
+                                View and manage users
+                            </span>
+
+                        </div>
+
+                        <span class="admin-quick-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+
+
+                    <a
+                        href="/admin-insurance-plans/"
+                        class="admin-quick-card"
+                    >
+
+                        <div class="admin-quick-icon green">
+                            ▤
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Manage Insurance Plans
+                            </strong>
+
+                            <span>
+                                Add and manage policy plans
+                            </span>
+
+                        </div>
+
+                        <span class="admin-quick-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+
+
+                    <a
+                        href="/admin-claims/"
+                        class="admin-quick-card"
+                    >
+
+                        <div class="admin-quick-icon purple">
+                            ▦
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                View Claims
+                            </strong>
+
+                            <span>
+                                Monitor submitted claims
+                            </span>
+
+                        </div>
+
+                        <span class="admin-quick-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+</body>
+
+</html>

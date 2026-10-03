@@ -1,0 +1,603 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Claim Officers
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Administrator: {{ user.email }}
+            </span>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- LAYOUT -->
+    <!-- ================================================== -->
+
+    <div class="dashboard-container">
+
+
+        <!-- ================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ================================================== -->
+
+        <aside class="sidebar">
+
+            <a href="/admin-dashboard/">
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/admin-policyholders/">
+                <span class="sidebar-icon">◯</span>
+                <span>Policyholders</span>
+            </a>
+
+
+            <a
+                href="/admin-officers/"
+                class="active"
+            >
+                <span class="sidebar-icon">▣</span>
+                <span>Insurance Officers</span>
+            </a>
+
+
+            <a href="/admin-insurance-plans/">
+                <span class="sidebar-icon">▤</span>
+                <span>Insurance Plans</span>
+            </a>
+
+
+            <a href="/admin-claims/">
+                <span class="sidebar-icon">▦</span>
+                <span>Claims</span>
+            </a>
+
+
+            <a href="/admin-reports/">
+                <span class="sidebar-icon">▥</span>
+                <span>Reports</span>
+            </a>
+
+
+            <a href="/profile/">
+                <span class="sidebar-icon">◉</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="/logout/"
+                class="sidebar-logout"
+            >
+                <span class="sidebar-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+
+
+        <!-- ================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================== -->
+
+        <main class="dashboard-main admin-officers-page">
+
+
+            <!-- ================================================== -->
+            <!-- PAGE HEADER -->
+            <!-- ================================================== -->
+
+            <div class="admin-officers-header">
+
+                <div>
+
+                    <div class="admin-officers-eyebrow">
+                        OFFICER MANAGEMENT
+                    </div>
+
+                    <h1>
+                        Claim Officers
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        Create and manage claim officer accounts
+                        and monitor their claim activity.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="/admin-officers/add/"
+                    class="admin-add-officer-button"
+                >
+                    <span>+</span>
+                    Add Officer
+                </a>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- STATISTICS -->
+            <!-- ================================================== -->
+
+            <div class="admin-officer-stat-grid">
+
+
+                <!-- Total Officers -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon blue">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Total Officers
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ total_officers }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Active Officers -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Active Officers
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ active_officers }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Inactive Officers -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon red">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Inactive Officers
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ inactive_officers }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- OFFICER TABLE -->
+            <!-- ================================================== -->
+
+            <div class="admin-content-card">
+
+
+                <div class="admin-content-header">
+
+                    <div class="admin-section-icon blue">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Officer Accounts
+                        </h2>
+
+                        <p>
+                            Manage registered ClaimIntel claim officers
+                            and monitor their assigned claims.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                {% if officers %}
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Officer
+                                    </th>
+
+                                    <th>
+                                        Email
+                                    </th>
+
+                                    <th>
+                                        Account Status
+                                    </th>
+
+                                    <th>
+                                        Assigned Claims
+                                    </th>
+
+                                    <th>
+                                        Approved
+                                    </th>
+
+                                    <th>
+                                        Rejected
+                                    </th>
+
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                {% for officer in officers %}
+
+
+                                    <tr>
+
+
+                                        <!-- Officer -->
+
+                                        <td>
+
+                                            <div class="admin-officer-cell">
+
+                                                <span class="admin-officer-avatar">
+                                                    ◉
+                                                </span>
+
+                                                <strong>
+
+                                                    {% if officer.get_full_name %}
+
+                                                        {{ officer.get_full_name }}
+
+                                                    {% else %}
+
+                                                        Officer
+
+                                                    {% endif %}
+
+                                                </strong>
+
+                                            </div>
+
+                                        </td>
+
+
+
+                                        <!-- Email -->
+
+                                        <td>
+
+                                            <span class="admin-officer-email">
+                                                {{ officer.email }}
+                                            </span>
+
+                                        </td>
+
+
+
+                                        <!-- Status -->
+
+                                        <td>
+
+                                            {% if officer.is_active %}
+
+                                                <span class="admin-account-status active">
+                                                    Active
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="admin-account-status inactive">
+                                                    Inactive
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+
+                                        <!-- Assigned Claims -->
+
+                                        <td>
+
+                                            <div class="admin-officer-count">
+
+                                                <strong>
+                                                    {{ officer.assigned_claim_count }}
+                                                </strong>
+
+                                                <span>
+                                                    Assigned
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+
+
+                                        <!-- Approved -->
+
+                                        <td>
+
+                                            <div class="admin-officer-count">
+
+                                                <strong class="admin-approved-number">
+                                                    {{ officer.approved_claim_count }}
+                                                </strong>
+
+                                                <span>
+                                                    Approved
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+
+
+                                        <!-- Rejected -->
+
+                                        <td>
+
+                                            <div class="admin-officer-count">
+
+                                                <strong class="admin-rejected-number">
+                                                    {{ officer.rejected_claim_count }}
+                                                </strong>
+
+                                                <span>
+                                                    Rejected
+                                                </span>
+
+                                            </div>
+
+                                        </td>
+
+
+
+                                        <!-- Actions -->
+
+                                        <td>
+
+                                            <div class="admin-officer-actions">
+
+
+                                                <a
+                                                    href="/admin-officers/edit/{{ officer.id }}/"
+                                                    class="admin-action-link edit"
+                                                >
+                                                    Edit
+                                                </a>
+
+
+                                                <span class="admin-action-divider">
+                                                    |
+                                                </span>
+
+
+                                                {% if officer.is_active %}
+
+                                                    <a
+                                                        href="/admin-officers/toggle/{{ officer.id }}/"
+                                                        class="admin-action-link deactivate"
+                                                        onclick="
+                                                            return confirm(
+                                                                'Are you sure you want to deactivate this officer?'
+                                                            );
+                                                        "
+                                                    >
+                                                        Deactivate
+                                                    </a>
+
+                                                {% else %}
+
+                                                    <a
+                                                        href="/admin-officers/toggle/{{ officer.id }}/"
+                                                        class="admin-action-link activate"
+                                                        onclick="
+                                                            return confirm(
+                                                                'Are you sure you want to activate this officer?'
+                                                            );
+                                                        "
+                                                    >
+                                                        Activate
+                                                    </a>
+
+                                                {% endif %}
+
+
+                                            </div>
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- ================================================= -->
+                    <!-- EMPTY STATE -->
+                    <!-- ================================================= -->
+
+                    <div class="admin-officer-empty">
+
+                        <div class="admin-officer-empty-icon">
+                            ▣
+                        </div>
+
+                        <h3>
+                            No Claim Officers Found
+                        </h3>
+
+                        <p>
+                            There are currently no officer accounts
+                            registered in ClaimIntel.
+                        </p>
+
+
+                        <a
+                            href="/admin-officers/add/"
+                            class="admin-add-officer-button"
+                        >
+                            <span>+</span>
+                            Create First Officer
+                        </a>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- OFFICER MANAGEMENT -->
+            <!-- ================================================== -->
+
+            <div class="admin-officer-info-card">
+
+                <div class="admin-officer-info-icon">
+                    i
+                </div>
+
+                <div>
+
+                    <h2>
+                        Officer Management
+                    </h2>
+
+                    <p>
+                        Administrators can create officer accounts,
+                        update officer information, activate or
+                        deactivate accounts, and monitor claim
+                        processing activity.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+</body>
+
+</html>

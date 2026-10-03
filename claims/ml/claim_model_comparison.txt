@@ -1,0 +1,46 @@
+ClaimIntel ML Model Comparison - V3
+========================================
+
+Dataset records: 8000
+
+Random Forest Accuracy: 52.88%
+Random Forest Macro F1: 0.5205
+
+Random Forest Classification Report:
+              precision    recall  f1-score   support
+
+        high       0.60      0.65      0.63       533
+         low       0.57      0.63      0.59       534
+      medium       0.38      0.31      0.34       533
+
+    accuracy                           0.53      1600
+   macro avg       0.52      0.53      0.52      1600
+weighted avg       0.52      0.53      0.52      1600
+
+Random Forest Confusion Matrix:
+[[334 138  62]
+ [202 165 166]
+ [ 54 132 347]]
+
+Gradient Boosting Accuracy: 54.37%
+Gradient Boosting Macro F1: 0.54
+
+Gradient Boosting Classification Report:
+              precision    recall  f1-score   support
+
+        high       0.64      0.64      0.64       533
+         low       0.57      0.63      0.60       534
+      medium       0.40      0.36      0.38       533
+
+    accuracy                           0.54      1600
+   macro avg       0.54      0.54      0.54      1600
+weighted avg       0.54      0.54      0.54      1600
+
+Gradient Boosting Confusion Matrix:
+[[338 146  50]
+ [198 193 142]
+ [ 54 140 339]]
+
+Selected Model: Gradient Boosting
+Selected Model Accuracy: 54.37%
+Selected Model Macro F1: 0.54

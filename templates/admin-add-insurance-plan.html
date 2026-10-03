@@ -1,0 +1,520 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel -
+        {% if plan %}
+            Edit Insurance Plan
+        {% else %}
+            Add Insurance Plan
+        {% endif %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Administrator: {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ========================================================= -->
+<!-- DASHBOARD LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/admin-dashboard/">
+            <span class="sidebar-icon">▣</span>
+            Dashboard
+        </a>
+
+        <a href="/admin-policyholders/">
+            <span class="sidebar-icon">♙</span>
+            Policyholders
+        </a>
+
+        <a href="/admin-officers/">
+            <span class="sidebar-icon">♙</span>
+            Insurance Officers
+        </a>
+
+        <a
+            href="/admin-insurance-plans/"
+            class="active"
+        >
+            <span class="sidebar-icon">▤</span>
+            Insurance Plans
+        </a>
+
+        <a href="/admin-claims/">
+            <span class="sidebar-icon">▧</span>
+            Claims
+        </a>
+
+        <a href="/admin-reports/">
+            <span class="sidebar-icon">◫</span>
+            Reports
+        </a>
+
+        <a href="/profile/">
+            <span class="sidebar-icon">⚙</span>
+            Profile
+        </a>
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+            <span class="sidebar-icon">↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main admin-plan-form-page">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <div class="admin-plan-form-header">
+
+            <div>
+
+                <div class="admin-plan-form-eyebrow">
+                    PLAN MANAGEMENT
+                </div>
+
+                <h1>
+
+                    {% if plan %}
+
+                        Edit Insurance Plan
+
+                    {% else %}
+
+                        Add New Insurance Plan
+
+                    {% endif %}
+
+                </h1>
+
+                <p class="dashboard-subtitle">
+
+                    {% if plan %}
+
+                        Update the details of this insurance plan.
+
+                    {% else %}
+
+                        Create a new car insurance package
+                        for policyholders.
+
+                    {% endif %}
+
+                </p>
+
+            </div>
+
+
+            <a
+                href="/admin-insurance-plans/"
+                class="admin-plan-form-back-button"
+            >
+                ← Back to Plans
+            </a>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- ERROR MESSAGE -->
+        <!-- ================================================= -->
+
+        {% if error %}
+
+            <div class="admin-plan-error-box">
+
+                <div class="admin-plan-error-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <strong>
+                        Error
+                    </strong>
+
+                    <p>
+                        {{ error }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- ================================================= -->
+        <!-- FORM -->
+        <!-- ================================================= -->
+
+        <form
+            method="POST"
+            class="admin-plan-form"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- ================================================= -->
+            <!-- PLAN DETAILS -->
+            <!-- ================================================= -->
+
+            <div class="admin-plan-form-card">
+
+                <div class="admin-plan-form-section-heading">
+
+                    <div class="admin-plan-form-section-icon blue">
+                        ▤
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Insurance Plan Details
+                        </h2>
+
+                        <p>
+                            Enter the main details of the insurance
+                            package.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-plan-form-grid">
+
+
+                    <!-- PLAN NAME -->
+
+                    <div class="admin-plan-form-field">
+
+                        <label for="name">
+                            Plan Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value="{{ plan.name|default:'' }}"
+                            placeholder="e.g. Premium Comprehensive"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- PLAN TYPE -->
+
+                    <div class="admin-plan-form-field">
+
+                        <label for="plan_type">
+                            Plan Type
+                        </label>
+
+                        <select
+                            id="plan_type"
+                            name="plan_type"
+                            required
+                        >
+
+                            <option value="">
+                                Select plan type
+                            </option>
+
+                            <option
+                                value="Comprehensive"
+                                {% if plan.plan_type == "Comprehensive" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Comprehensive
+                            </option>
+
+                            <option
+                                value="Third Party"
+                                {% if plan.plan_type == "Third Party" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Third Party
+                            </option>
+
+                            <option
+                                value="Own Damage"
+                                {% if plan.plan_type == "Own Damage" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Own Damage
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="admin-plan-form-field admin-plan-full-width">
+
+                        <label for="description">
+                            Description
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="5"
+                            placeholder="Describe what this insurance plan covers..."
+                        >{{ plan.description|default:'' }}</textarea>
+
+                    </div>
+
+
+
+                    <!-- PREMIUM -->
+
+                    <div class="admin-plan-form-field">
+
+                        <label for="premium">
+                            Premium (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="premium"
+                            name="premium"
+                            value="{{ plan.premium|default:'' }}"
+                            placeholder="e.g. 15000"
+                            min="1"
+                            step="0.01"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <!-- INSURED VALUE -->
+
+                    <div class="admin-plan-form-field">
+
+                        <label for="insured_value">
+                            Insured Value (₹)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="insured_value"
+                            name="insured_value"
+                            value="{{ plan.insured_value|default:'' }}"
+                            placeholder="e.g. 500000"
+                            min="1"
+                            step="0.01"
+                        >
+
+                    </div>
+
+
+
+                    <!-- DURATION -->
+
+                    <div class="admin-plan-form-field admin-plan-duration-field">
+
+                        <label for="duration_years">
+                            Duration (Years)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="duration_years"
+                            name="duration_years"
+                            value="{{ plan.duration_years|default:'1' }}"
+                            min="1"
+                            max="10"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- PLAN STATUS -->
+            <!-- ================================================= -->
+
+            <div class="admin-plan-form-card">
+
+                <div class="admin-plan-form-section-heading">
+
+                    <div class="admin-plan-form-section-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Plan Status
+                        </h2>
+
+                        <p>
+                            Control whether this plan is available
+                            to policyholders.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <label class="admin-plan-status-option">
+
+                    <input
+                        type="checkbox"
+                        name="is_active"
+                        {% if not plan or plan.is_active %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span class="admin-plan-status-check">
+
+                        <strong>
+                            Active Plan
+                        </strong>
+
+                        <small>
+                            Active plans will be available to
+                            policyholders when they select an
+                            insurance policy.
+                        </small>
+
+                    </span>
+
+                </label>
+
+            </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- ACTIONS -->
+            <!-- ================================================= -->
+
+            <div class="admin-plan-form-actions">
+
+                <button
+                    type="submit"
+                    class="admin-save-plan-button"
+                >
+
+                    {% if plan %}
+
+                        Update Insurance Plan
+
+                    {% else %}
+
+                        Create Insurance Plan
+
+                    {% endif %}
+
+                </button>
+
+
+                <a
+                    href="/admin-insurance-plans/"
+                    class="admin-cancel-plan-button"
+                >
+                    Cancel
+                </a>
+
+            </div>
+
+
+        </form>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

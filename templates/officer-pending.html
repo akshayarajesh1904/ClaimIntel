@@ -1,0 +1,489 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Pending Review</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Officer: {{ user.email }}
+            </span>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- LAYOUT -->
+    <!-- ================================================== -->
+
+    <div class="dashboard-container">
+
+
+        <!-- ================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ================================================== -->
+
+        <aside class="sidebar">
+
+            <a href="/officer-dashboard/">
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/officer-claims/">
+                <span class="sidebar-icon">▣</span>
+                <span>Claims</span>
+            </a>
+
+
+            <a
+                href="/officer-pending/"
+                class="active"
+            >
+                <span class="sidebar-icon">◷</span>
+                <span>Pending Review</span>
+            </a>
+
+
+            <a href="/officer-reports/">
+                <span class="sidebar-icon">▤</span>
+                <span>Reports</span>
+            </a>
+
+
+            <a href="/profile/">
+                <span class="sidebar-icon">◯</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="/logout/"
+                class="sidebar-logout"
+            >
+                <span class="sidebar-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+
+
+        <!-- ================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================== -->
+
+        <main class="dashboard-main officer-pending-page">
+
+
+            <!-- ================================================== -->
+            <!-- PAGE HEADER -->
+            <!-- ================================================== -->
+
+            <div class="pending-page-header">
+
+                <div>
+
+                    <div class="pending-eyebrow">
+                        CLAIM REVIEW
+                    </div>
+
+                    <h1>
+                        Pending Review
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        Claims that require officer review and decision.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- STAT CARDS -->
+            <!-- ================================================== -->
+
+            <div class="report-kpi-grid">
+
+
+                <!-- Total Pending -->
+
+                <div class="report-kpi-card">
+
+                    <div class="report-kpi-icon orange">
+                        ◷
+                    </div>
+
+                    <div class="report-kpi-content">
+
+                        <span class="report-kpi-label">
+                            Total Pending
+                        </span>
+
+                        <strong class="report-kpi-value">
+                            {{ pending_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Medium Risk -->
+
+                <div class="report-kpi-card">
+
+                    <div class="report-kpi-icon blue">
+                        ⚠
+                    </div>
+
+                    <div class="report-kpi-content">
+
+                        <span class="report-kpi-label">
+                            Medium Risk
+                        </span>
+
+                        <strong class="report-kpi-value">
+                            {{ medium_risk_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- High Risk -->
+
+                <div class="report-kpi-card">
+
+                    <div class="report-kpi-icon red">
+                        !
+                    </div>
+
+                    <div class="report-kpi-content">
+
+                        <span class="report-kpi-label">
+                            High Risk
+                        </span>
+
+                        <strong class="report-kpi-value">
+                            {{ high_risk_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- CLAIMS TO REVIEW -->
+            <!-- ================================================== -->
+
+            <div class="claims-section pending-claims-section">
+
+
+                <div class="pending-section-header">
+
+                    
+
+
+                    <div>
+
+                        <h2>
+                            Claims Requiring Review
+                        </h2>
+
+                        <p>
+                            Review the claim details and supporting
+                            information before making a decision.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                {% if claims %}
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Claim ID
+                                </th>
+
+                                <th>
+                                    Policyholder
+                                </th>
+
+                                <th>
+                                    Vehicle
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Risk Level
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            {% for claim in claims %}
+
+
+                            <tr>
+
+
+                                <!-- Claim ID -->
+
+                                <td>
+
+                                    <strong class="claim-id-text">
+                                        {{ claim.claim_id }}
+                                    </strong>
+
+                                </td>
+
+
+
+                                <!-- Policyholder -->
+
+                                <td>
+
+                                    <span class="policyholder-email">
+                                        {{ claim.policyholder.email }}
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- Vehicle -->
+
+                                <td>
+
+                                    <div class="vehicle-cell">
+
+                                        <span class="vehicle-icon">
+                                            🚗
+                                        </span>
+
+                                        <span>
+                                            {{ claim.vehicle_make }}
+                                            {{ claim.vehicle_model }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- Date -->
+
+                                <td>
+
+                                    <span class="date-cell">
+                                        {{ claim.incident_date|date:"d M Y" }}
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- Risk -->
+
+                                <td>
+
+
+                                    {% if claim.risk_level == 'low' %}
+
+                                        <span class="status approved">
+                                            Low
+                                        </span>
+
+
+                                    {% elif claim.risk_level == 'medium' %}
+
+                                        <span class="status pending">
+                                            Medium
+                                        </span>
+
+
+                                    {% elif claim.risk_level == 'high' %}
+
+                                        <span class="status rejected">
+                                            High
+                                        </span>
+
+
+                                    {% else %}
+
+                                        <span class="status pending">
+                                            Not Assessed
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- Action -->
+
+                                <td>
+
+                                    <a
+                                        href="/officer-claim/{{ claim.claim_id }}/"
+                                        class="view-link pending-review-link"
+                                    >
+                                        Review →
+                                    </a>
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                {% else %}
+
+
+                    <div class="pending-empty-state">
+
+                        <div class="pending-empty-icon">
+                            ✓
+                        </div>
+
+                        <h3>
+                            No Claims Pending
+                        </h3>
+
+                        <p>
+                            There are currently no claims waiting
+                            for officer review.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- REVIEW REMINDER -->
+            <!-- ================================================== -->
+
+            <div class="pending-review-reminder">
+
+                <div class="pending-reminder-icon">
+                    i
+                </div>
+
+
+                <div>
+
+                    <strong>
+                        Review Reminder
+                    </strong>
+
+                    <p>
+                        Review the claim information, uploaded documents,
+                        and AI risk assessment before making a final decision.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+</body>
+
+</html>

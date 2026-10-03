@@ -1,0 +1,1885 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Submit Claim</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=3"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ================================================== -->
+<!-- HEADER -->
+<!-- ================================================== -->
+
+<header class="dashboard-header">
+
+    <h2>🛡 ClaimIntel</h2>
+
+    <div>
+
+        <span>
+            Welcome, {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================================================== -->
+<!-- DASHBOARD LAYOUT -->
+<!-- ================================================== -->
+
+<div class="dashboard-container">
+
+
+    <!-- ================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/dashboard/">
+
+            <span class="sidebar-icon">⌂</span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <a href="/my-claims/">
+
+            <span class="sidebar-icon">▣</span>
+
+            <span>
+                My Claims
+            </span>
+
+        </a>
+
+
+        {% if not has_policy %}
+        <a href="/available-policies/">
+
+            <span class="sidebar-icon">▤</span>
+
+            <span>
+                Register New Policy
+            </span>
+
+        </a>
+        {% endif %}
+
+
+        <a
+            href="/submit-claim/"
+            class="active"
+        >
+
+            <span class="sidebar-icon">+</span>
+
+            <span>
+                Submit Claim
+            </span>
+
+        </a>
+
+
+        <a href="/profile/">
+
+            <span class="sidebar-icon">◯</span>
+
+            <span>
+                Profile
+            </span>
+
+        </a>
+
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+
+            <span class="sidebar-icon">↪</span>
+
+            <span>
+                Logout
+            </span>
+
+        </a>
+
+    </aside>
+
+
+
+    <!-- ================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ================================================== -->
+
+    <main class="dashboard-main submit-claim-page">
+
+
+        <!-- ================================================== -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================== -->
+
+        <div class="submit-claim-header">
+
+            <div>
+
+                <div class="submit-claim-eyebrow">
+                    CLAIM SUBMISSION
+                </div>
+
+                <h1>
+                    Submit a Claim
+                </h1>
+
+                <p class="dashboard-subtitle">
+
+                    Provide the incident and damage details
+                    required to submit your insurance claim.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================== -->
+        <!-- ERROR MESSAGE -->
+        <!-- ================================================== -->
+
+        {% if error %}
+
+            <div class="submit-claim-error">
+
+                <div class="submit-claim-error-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <strong>
+                        Unable to Submit Claim
+                    </strong>
+
+                    <p>
+                        {{ error }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+
+        <!-- ================================================== -->
+        <!-- CLAIM FORM -->
+        <!-- ================================================== -->
+
+        <form
+            class="claim-form submit-claim-form"
+            method="POST"
+            action="/submit-claim/"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+
+
+            <!-- ================================================== -->
+            <!-- 1. REGISTERED POLICY -->
+            <!-- ================================================== -->
+
+            <div class="submit-section">
+
+                <div class="submit-section-heading">
+
+                    <div class="submit-section-number blue">
+                        01
+                    </div>
+
+                    <div>
+
+                        <div>
+
+                            <h2>
+                                Select Registered Policy
+                            </h2>
+
+                            <p>
+                                Choose the policy under which you want
+                                to submit this claim.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {% if policies %}
+
+                    <div class="submit-field">
+
+                        <label for="policySelect">
+                            Registered Policy
+                        </label>
+
+                        <select
+                            name="policy_id"
+                            id="policySelect"
+                            required
+                        >
+
+                            <option value="">
+                                Select a registered policy
+                            </option>
+
+
+                            {% for policy in policies %}
+
+                                <option
+                                    value="{{ policy.id }}"
+
+                                    data-vehicle-make="{{ policy.vehicle_make|default:'' }}"
+
+                                    data-vehicle-model="{{ policy.vehicle_model|default:'' }}"
+
+                                    data-vehicle-variant="{{ policy.vehicle_variant|default:'' }}"
+
+                                    data-vehicle-year="{{ policy.vehicle_year|default:'' }}"
+
+                                    data-registration-number="{{ policy.registration_number|default:'' }}"
+
+                                    data-fuel-type="{{ policy.fuel_type|default:'' }}"
+
+                                    {% if selected_policy_id == policy.id|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ policy.policy_number }}
+                                    -
+                                    {{ policy.vehicle_year }}
+                                    {{ policy.vehicle_make }}
+                                    {{ policy.vehicle_model }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                {% else %}
+
+                    <div class="submit-empty-policy">
+
+                        <div class="submit-empty-icon">
+                            ▤
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                No Registered Policies
+                            </strong>
+
+                            <p>
+                                You do not have any registered insurance
+                                policies. Please register a policy before
+                                submitting a claim.
+                            </p>
+
+                            <a href="/available-policies/">
+                                Register a Policy →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 2. VEHICLE DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="submit-section">
+
+                <div class="submit-section-heading">
+
+                    <div class="submit-section-number purple">
+                        02
+                    </div>
+
+                    <div class="submit-section-title-wrap">
+
+                        
+
+                        <div>
+
+                            <h2>
+                                Vehicle Details
+                            </h2>
+
+                            <p>
+                                These details are automatically loaded
+                                from your selected policy.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="submit-info-grid">
+
+
+                    <div class="submit-info-field">
+
+                        <label>
+                            Vehicle Make
+                        </label>
+
+                        <input
+                            type="text"
+                            id="display_vehicle_make"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="submit-info-field">
+
+                        <label>
+                            Vehicle Model
+                        </label>
+
+                        <input
+                            type="text"
+                            id="display_vehicle_model"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="submit-info-field">
+
+                        <label>
+                            Vehicle Variant
+                        </label>
+
+                        <input
+                            type="text"
+                            id="display_vehicle_variant"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="submit-info-field">
+
+                        <label>
+                            Vehicle Year
+                        </label>
+
+                        <input
+                            type="text"
+                            id="display_vehicle_year"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="submit-info-field">
+
+                        <label>
+                            Registration Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="display_registration_number"
+                            readonly
+                        >
+
+                    </div>
+
+
+                    <div class="submit-info-field">
+
+                        <label>
+                            Fuel Type
+                        </label>
+
+                        <input
+                            type="text"
+                            id="display_fuel_type"
+                            readonly
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 3. INCIDENT DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="submit-section">
+
+                <div class="submit-section-heading">
+
+                    <div class="submit-section-number orange">
+                        03
+                    </div>
+
+                    <div class="submit-section-title-wrap">
+
+                        
+
+                        <div>
+
+                            <h2>
+                                Incident Details
+                            </h2>
+
+                            <p>
+                                Tell us when, where and how the incident
+                                occurred.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="submit-form-grid">
+
+
+                    <div class="submit-field">
+
+    <label for="incident_date">
+        Incident Date
+    </label>
+
+    <input
+        type="date"
+        id="incident_date"
+        name="incident_date"
+        required
+    >
+
+    <small id="incident-date-error"
+           style="display:none;">
+    </small>
+
+</div>
+
+
+                    <div class="submit-field">
+
+                        <label for="incident_time">
+                            Incident Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="incident_time"
+                            name="incident_time"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="accident_type">
+                            Incident Type
+                        </label>
+
+                        <select
+                            name="accident_type"
+                            id="accident_type"
+                            required
+                        >
+
+                            <option value="">
+                                Select incident type
+                            </option>
+
+                            <option value="Collision">
+                                Collision
+                            </option>
+
+                            <option value="Theft">
+                                Theft
+                            </option>
+
+                            <option value="Fire">
+                                Fire
+                            </option>
+
+                            <option value="Natural Disaster">
+                                Natural Disaster
+                            </option>
+
+                            <option value="Vandalism">
+                                Vandalism
+                            </option>
+
+                            <option value="Hit & Run">
+                                Hit & Run
+                            </option>
+
+                            <option value="Hail/Weather">
+                                Hail / Weather
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="accident_location">
+                            Incident Location
+                        </label>
+
+                        <input
+                            type="text"
+                            id="accident_location"
+                            name="accident_location"
+                            placeholder="Enter incident location"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="submit-field submit-full">
+
+                        <label for="description">
+                            What Happened?
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="5"
+                            placeholder="Describe what happened, how the incident occurred, and the circumstances involved..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 4. DRIVER DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="submit-section">
+
+                <div class="submit-section-heading">
+
+                    <div class="submit-section-number green">
+                        04
+                    </div>
+
+                    <div class="submit-section-title-wrap">
+
+                        
+
+                        <div>
+
+                            <h2>
+                                Driver Details
+                            </h2>
+
+                            <p>
+                                Enter the details of the driver involved
+                                in the incident.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="submit-form-grid">
+
+
+                    <div class="submit-field">
+
+                        <label for="driver_name">
+                            Driver Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="driver_name"
+                            name="driver_name"
+                            placeholder="Enter driver's full name"
+                            maxlength="150"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="driving_license_number">
+                            Driving License Number
+                        </label>
+
+                    <input
+        type="text"
+        id="driving_license_number"
+        name="driving_license_number"
+        value="{{ user.userprofile.driving_license_number|default:'' }}"
+        readonly
+        required
+    >
+
+    <small>
+        Driving license number is automatically retrieved
+        from your registered profile.
+    </small>
+
+</div>
+
+
+                    <div class="submit-field">
+
+                        <label for="driver_age">
+                            Driver Age
+                        </label>
+
+                        <input
+                            type="number"
+                            id="driver_age"
+                            name="driver_age"
+                            placeholder="Enter driver age"
+                            min="18"
+                            max="80"
+                            required
+                        >
+                        <small
+        id="driver-age-error"
+        style="display:none;"
+    ></small>
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="driver_authorised">
+                            Was the driver authorised under the policy?
+                        </label>
+
+                        <select
+                            name="driver_authorised"
+                            id="driver_authorised"
+                            required
+                        >
+
+                            <option value="">
+                                Select
+                            </option>
+
+                            <option value="Yes">
+                                Yes
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 5. THIRD PARTY DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="submit-section">
+
+                <div class="submit-section-heading">
+
+                    <div class="submit-section-number blue">
+                        05
+                    </div>
+
+                    <div class="submit-section-title-wrap">
+
+                        
+
+                        <div>
+
+                            <h2>
+                                Third-Party Details
+                            </h2>
+
+                            <p>
+                                Provide information about another person
+                                or vehicle involved in the incident.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="submit-form-grid">
+
+
+                    <div class="submit-field">
+
+                        <label for="third_party_involved">
+                            Was another vehicle or third party involved?
+                        </label>
+
+                        <select
+                            name="third_party_involved"
+                            id="third_party_involved"
+                            required
+                        >
+
+                            <option value="">
+                                Select
+                            </option>
+
+                            <option value="Yes">
+                                Yes
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="third_party_injury">
+                            Was anyone injured?
+                        </label>
+
+                        <select
+                            name="third_party_injury"
+                            id="third_party_injury"
+                            required
+                        >
+
+                            <option value="">
+                                Select
+                            </option>
+
+                            <option value="Yes">
+                                Yes
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="third_party_damage">
+                            Was third-party property or vehicle damaged?
+                        </label>
+
+                        <select
+                            name="third_party_damage"
+                            id="third_party_damage"
+                            required
+                        >
+
+                            <option value="">
+                                Select
+                            </option>
+
+                            <option value="Yes">
+                                Yes
+                            </option>
+
+                            <option value="No">
+                                No
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 6. POLICE / FIR DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="submit-section">
+
+                <div class="submit-section-heading">
+
+                    <div class="submit-section-number red">
+                        06
+                    </div>
+
+                    <div class="submit-section-title-wrap">
+
+                       
+
+                        <div>
+
+                            <h2>
+                                Police / FIR Details
+                            </h2>
+
+                            <p>
+                                Provide police report details where
+                                applicable.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="submit-form-grid">
+
+
+                    <div class="submit-field">
+
+                        <label for="police_report_status">
+                            Police Report / FIR Status
+                        </label>
+
+                        <select
+                            name="police_report_status"
+                            id="police_report_status"
+                            required
+                        >
+
+                            <option value="">
+                                Select
+                            </option>
+
+                            <option value="reported">
+                                Reported
+                            </option>
+
+                            <option value="not_reported">
+                                Not Reported
+                            </option>
+
+                            <option value="not_required">
+                                Not Required
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="police_report_number">
+                            FIR / Police Report Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="police_report_number"
+                            name="police_report_number"
+                            placeholder="Enter report number if applicable"
+                        >
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="police_station">
+                            Police Station
+                        </label>
+
+                        <input
+                            type="text"
+                            id="police_station"
+                            name="police_station"
+                            placeholder="Police station name"
+                        >
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+    <label for="police_report_date">
+        Report Date
+    </label>
+
+    <input
+        type="date"
+        id="police_report_date"
+        name="police_report_date"
+    >
+
+    <small id="report-date-error"
+           style="display:none;">
+    </small>
+
+</div>
+
+
+                    <div
+                        class="submit-field submit-full"
+                        id="notReportedReasonGroup"
+                        style="display: none;"
+                    >
+
+                        <label for="police_not_reported_reason">
+                            Reason for not reporting
+                        </label>
+
+                        <textarea
+                            id="police_not_reported_reason"
+                            name="police_not_reported_reason"
+                            rows="3"
+                            placeholder="Please explain why the incident was not reported to the police."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 7. DAMAGE & CLAIM DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="submit-section">
+
+                <div class="submit-section-heading">
+
+                    <div class="submit-section-number orange">
+                        07
+                    </div>
+
+                    <div class="submit-section-title-wrap">
+
+                        
+
+                        <div>
+
+                            <h2>
+                                Damage & Claim Details
+                            </h2>
+
+                            <p>
+                                Provide the estimated damage and claim
+                                information.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="submit-form-grid">
+
+
+                    <div class="submit-field">
+
+                        <label for="estimated_damage">
+                            Estimated Damage
+                        </label>
+
+                        <input
+                            type="number"
+                            id="estimated_damage"
+                            name="estimated_damage"
+                            placeholder="₹ Estimated damage"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="submit-field">
+
+                        <label for="claim_amount">
+                            Claim Amount
+                        </label>
+
+                        <input
+                            type="number"
+                            id="claim_amount"
+                            name="claim_amount"
+                            placeholder="₹ Amount being claimed"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="submit-field submit-full">
+
+                        <label for="damage_description">
+                            Damage Description
+                        </label>
+
+                        <textarea
+                            id="damage_description"
+                            name="damage_description"
+                            rows="5"
+                            placeholder="Describe the damage to the vehicle..."
+                            required
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================================================== -->
+                <!-- DAMAGED PARTS -->
+                <!-- ================================================== -->
+
+                <div class="damaged-parts-section submit-damaged-parts">
+
+                    <div class="damaged-parts-title">
+                        Damaged Parts
+                    </div>
+
+                    <p class="submit-damaged-help">
+                        Select the parts of the vehicle affected by the incident.
+                    </p>
+
+
+                    <div class="damaged-parts-list">
+
+
+                        <label class="damaged-part-row">
+
+                            <input
+                                type="checkbox"
+                                id="damaged_front_bumper"
+                                name="damaged_parts"
+                                value="Front Bumper"
+                            >
+
+                            <span>
+                                Front Bumper
+                            </span>
+
+                        </label>
+
+
+                        <label class="damaged-part-row">
+
+                            <input
+                                type="checkbox"
+                                id="damaged_rear_bumper"
+                                name="damaged_parts"
+                                value="Rear Bumper"
+                            >
+
+                            <span>
+                                Rear Bumper
+                            </span>
+
+                        </label>
+
+
+                        <label class="damaged-part-row">
+
+                            <input
+                                type="checkbox"
+                                id="damaged_bonnet"
+                                name="damaged_parts"
+                                value="Bonnet"
+                            >
+
+                            <span>
+                                Bonnet
+                            </span>
+
+                        </label>
+
+
+                        <label class="damaged-part-row">
+
+                            <input
+                                type="checkbox"
+                                id="damaged_doors"
+                                name="damaged_parts"
+                                value="Doors"
+                            >
+
+                            <span>
+                                Doors
+                            </span>
+
+                        </label>
+
+
+                        <label class="damaged-part-row">
+
+                            <input
+                                type="checkbox"
+                                id="damaged_windscreen"
+                                name="damaged_parts"
+                                value="Windscreen"
+                            >
+
+                            <span>
+                                Windscreen
+                            </span>
+
+                        </label>
+
+
+                        <label class="damaged-part-row">
+
+                            <input
+                                type="checkbox"
+                                id="damaged_headlights"
+                                name="damaged_parts"
+                                value="Headlights"
+                            >
+
+                            <span>
+                                Headlights
+                            </span>
+
+                        </label>
+
+
+                        <label class="damaged-part-row">
+
+                            <input
+                                type="checkbox"
+                                id="damaged_engine"
+                                name="damaged_parts"
+                                value="Engine"
+                            >
+
+                            <span>
+                                Engine
+                            </span>
+
+                        </label>
+
+
+                        <label class="damaged-part-row">
+
+                            <input
+                                type="checkbox"
+                                id="damaged_other"
+                                name="damaged_parts"
+                                value="Other"
+                            >
+
+                            <span>
+                                Other
+                            </span>
+
+                        </label>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Previous Claims -->
+
+                <div class="submit-field submit-previous-claims">
+
+                    <label for="previous_claims">
+                        Previous Claims
+                    </label>
+
+                    <input
+                        type="number"
+                        id="previous_claims"
+                        name="previous_claims"
+                        value="{{ previous_claims }}"
+                        readonly
+                    >
+
+                    <small>
+                        Previous claims are automatically retrieved from your account.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 8. SUPPORTING DOCUMENTS -->
+            <!-- ================================================== -->
+
+            <div class="submit-section">
+
+                <div class="submit-section-heading">
+
+                    <div class="submit-section-number purple">
+                        08
+                    </div>
+
+                    <div class="submit-section-title-wrap">
+
+                        
+
+                        <div>
+
+                            <h2>
+                                Supporting Documents
+                            </h2>
+
+                            <p>
+                                Upload documents related to your claim,
+                                where applicable.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="submit-document-grid">
+
+
+                    <div class="submit-document-card">
+
+                        <div class="submit-document-icon">
+                            DL
+                        </div>
+
+                        <div class="submit-document-content">
+
+                            <label for="driving_license">
+                                Driving License
+                            </label>
+
+                            <span>
+                                Upload a copy of your driving license.
+                            </span>
+
+                            <input
+                                type="file"
+                                id="driving_license"
+                                name="driving_license"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="submit-document-card">
+
+                        <div class="submit-document-icon">
+                            RC
+                        </div>
+
+                        <div class="submit-document-content">
+
+                            <label for="vehicle_registration">
+                                Vehicle Registration Certificate
+                            </label>
+
+                            <span>
+                                Upload your vehicle registration certificate.
+                            </span>
+
+                            <input
+                                type="file"
+                                id="vehicle_registration"
+                                name="vehicle_registration"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="submit-document-card">
+
+                        <div class="submit-document-icon">
+                            IP
+                        </div>
+
+                        <div class="submit-document-content">
+
+                            <label for="insurance_policy">
+                                Insurance Policy
+                            </label>
+
+                            <span>
+                                Upload the relevant insurance policy document.
+                            </span>
+
+                            <input
+                                type="file"
+                                id="insurance_policy"
+                                name="insurance_policy"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="submit-document-card">
+
+                        <div class="submit-document-icon">
+                            RE
+                        </div>
+
+                        <div class="submit-document-content">
+
+                            <label for="repair_estimate">
+                                Repair Estimate
+                            </label>
+
+                            <span>
+                                Upload the repair or garage estimate.
+                            </span>
+
+                            <input
+                                type="file"
+                                id="repair_estimate"
+                                name="repair_estimate"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="submit-document-card">
+
+                        <div class="submit-document-icon">
+                            FIR
+                        </div>
+
+                        <div class="submit-document-content">
+
+                            <label for="police_report_document">
+                                Police Report / FIR
+                            </label>
+
+                            <span>
+                                Upload the police report or FIR, if applicable.
+                            </span>
+
+                            <input
+                                type="file"
+                                id="police_report_document"
+                                name="police_report_document"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- SUBMIT -->
+            <!-- ================================================== -->
+
+            <div class="submit-claim-actions">
+
+                <div class="submit-claim-action-note">
+
+                    <span class="submit-action-check">
+                        ✓
+                    </span>
+
+                    <span>
+                        Review your information before submitting the claim.
+                    </span>
+
+                </div>
+
+
+                {% if policies %}
+
+                    <button
+                        type="submit"
+                        class="submit-claim-button"
+                    >
+
+                        Submit Claim
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+
+                {% else %}
+
+                    <button
+                        type="button"
+                        class="submit-claim-button disabled"
+                        disabled
+                    >
+
+                        No Registered Policy
+
+                    </button>
+
+                {% endif %}
+
+            </div>
+
+
+        </form>
+
+    </main>
+
+</div>
+
+
+
+<!-- ================================================== -->
+<!-- AUTO-FILL VEHICLE DETAILS -->
+<!-- ================================================== -->
+
+<script>
+
+    const policySelect =
+        document.getElementById('policySelect');
+
+    const vehicleMake =
+        document.getElementById('display_vehicle_make');
+
+    const vehicleModel =
+        document.getElementById('display_vehicle_model');
+
+    const vehicleVariant =
+        document.getElementById('display_vehicle_variant');
+
+    const vehicleYear =
+        document.getElementById('display_vehicle_year');
+
+    const registrationNumber =
+        document.getElementById('display_registration_number');
+
+    const fuelType =
+        document.getElementById('display_fuel_type');
+
+
+    function updateVehicleDetails() {
+
+        if (!policySelect) {
+            return;
+        }
+
+
+        const selectedOption =
+            policySelect.options[
+                policySelect.selectedIndex
+            ];
+
+
+        if (
+            !selectedOption ||
+            !selectedOption.value
+        ) {
+
+            if (vehicleMake) {
+                vehicleMake.value = '';
+            }
+
+            if (vehicleModel) {
+                vehicleModel.value = '';
+            }
+
+            if (vehicleVariant) {
+                vehicleVariant.value = '';
+            }
+
+            if (vehicleYear) {
+                vehicleYear.value = '';
+            }
+
+            if (registrationNumber) {
+                registrationNumber.value = '';
+            }
+
+            if (fuelType) {
+                fuelType.value = '';
+            }
+
+            return;
+
+        }
+
+
+        if (vehicleMake) {
+            vehicleMake.value =
+                selectedOption.dataset.vehicleMake || '';
+        }
+
+        if (vehicleModel) {
+            vehicleModel.value =
+                selectedOption.dataset.vehicleModel || '';
+        }
+
+        if (vehicleVariant) {
+            vehicleVariant.value =
+                selectedOption.dataset.vehicleVariant || '';
+        }
+
+        if (vehicleYear) {
+            vehicleYear.value =
+                selectedOption.dataset.vehicleYear || '';
+        }
+
+        if (registrationNumber) {
+            registrationNumber.value =
+                selectedOption.dataset.registrationNumber || '';
+        }
+
+        if (fuelType) {
+            fuelType.value =
+                selectedOption.dataset.fuelType || '';
+        }
+
+    }
+
+
+    if (policySelect) {
+
+        policySelect.addEventListener(
+            'change',
+            updateVehicleDetails
+        );
+
+        updateVehicleDetails();
+
+    }
+    // ========================================================
+// INCIDENT DATE VALIDATION
+// ========================================================
+
+const incidentDate =
+    document.getElementById('incident_date');
+
+if (incidentDate) {
+
+    const today = new Date();
+
+    const todayString =
+        today.toISOString().split('T')[0];
+
+    const minimumIncidentDate =
+        new Date();
+
+    minimumIncidentDate.setMonth(
+        minimumIncidentDate.getMonth() - 1
+    );
+
+    const minimumIncidentDateString =
+        minimumIncidentDate
+            .toISOString()
+            .split('T')[0];
+
+    incidentDate.min =
+        minimumIncidentDateString;
+
+    incidentDate.max =
+        todayString;
+
+}
+
+</script>
+
+
+
+<!-- ================================================== -->
+<!-- POLICE REASON TOGGLE -->
+<!-- ================================================== -->
+
+<script>
+
+    const policeStatus =
+        document.getElementById('police_report_status');
+
+    const reasonGroup =
+        document.getElementById('notReportedReasonGroup');
+
+    const reasonField =
+        document.getElementById(
+            'police_not_reported_reason'
+        );
+
+
+    function updatePoliceReason() {
+
+        if (!policeStatus || !reasonGroup) {
+            return;
+        }
+
+
+        if (
+            policeStatus.value === 'not_reported' ||
+            policeStatus.value === 'not_required'
+        ) {
+
+            reasonGroup.style.display = 'block';
+
+        } else {
+
+            reasonGroup.style.display = 'none';
+
+            if (reasonField) {
+                reasonField.value = '';
+            }
+
+        }
+
+    }
+
+
+    if (policeStatus) {
+
+        policeStatus.addEventListener(
+            'change',
+            updatePoliceReason
+        );
+
+        updatePoliceReason();
+
+    }
+    // ========================================================
+// POLICE REPORT DATE VALIDATION
+// ========================================================
+
+const reportDate =
+    document.getElementById(
+        'police_report_date'
+    );
+
+if (reportDate) {
+
+    const today = new Date();
+
+    const todayString =
+        today.toISOString().split('T')[0];
+
+    const minimumReportDate =
+        new Date();
+
+    minimumReportDate.setMonth(
+        minimumReportDate.getMonth() - 1
+    );
+
+    const minimumReportDateString =
+        minimumReportDate
+            .toISOString()
+            .split('T')[0];
+
+    reportDate.min =
+        minimumReportDateString;
+
+    reportDate.max =
+        todayString;
+
+}
+// ========================================================
+// DRIVER AGE VALIDATION
+// ========================================================
+
+const driverAge =
+    document.getElementById('driver_age');
+
+const driverAgeError =
+    document.getElementById(
+        'driver-age-error'
+    );
+
+if (driverAge) {
+
+    driverAge.min = 18;
+    driverAge.max = 80;
+
+    driverAge.addEventListener(
+        'input',
+        function () {
+
+            let value =
+                this.value;
+
+            if (value.length > 2) {
+
+                this.value =
+                    value.slice(0, 2);
+
+            }
+
+            const age =
+                parseInt(
+                    this.value,
+                    10
+                );
+
+            if (
+                this.value &&
+                (
+                    age < 18 ||
+                    age > 80
+                )
+            ) {
+
+                driverAgeError.textContent =
+                    'Driver age must be between 18 and 80 years.';
+
+                driverAgeError.style.display =
+                    'block';
+
+                this.setCustomValidity(
+                    'Driver age must be between 18 and 80 years.'
+                );
+
+            } else {
+
+                driverAgeError.style.display =
+                    'none';
+
+                this.setCustomValidity('');
+
+            }
+
+        }
+    );
+
+}
+</script>
+
+
+</body>
+
+</html>

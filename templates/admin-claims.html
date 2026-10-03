@@ -1,0 +1,673 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Claims
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Administrator: {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================================= -->
+<!-- DASHBOARD LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/admin-dashboard/">
+            <span class="sidebar-icon">▣</span>
+            Dashboard
+        </a>
+
+        <a href="/admin-policyholders/">
+            <span class="sidebar-icon">♙</span>
+            Policyholders
+        </a>
+
+        <a href="/admin-officers/">
+            <span class="sidebar-icon">♙</span>
+            Insurance Officers
+        </a>
+
+        <a href="/admin-insurance-plans/">
+            <span class="sidebar-icon">▤</span>
+            Insurance Plans
+        </a>
+
+        <a
+            href="/admin-claims/"
+            class="active"
+        >
+            <span class="sidebar-icon">▧</span>
+            Claims
+        </a>
+
+        <a href="/admin-reports/">
+            <span class="sidebar-icon">◫</span>
+            Reports
+        </a>
+
+        <a href="/profile/">
+            <span class="sidebar-icon">⚙</span>
+            Profile
+        </a>
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+            <span class="sidebar-icon">↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main admin-claims-page">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <div class="admin-claims-header">
+
+            <div>
+
+                <div class="admin-claims-eyebrow">
+                    CLAIM MANAGEMENT
+                </div>
+
+                <h1>
+                    Claims
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    Monitor and review all insurance claims
+                    in the system.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- STATISTICS -->
+        <!-- ================================================= -->
+
+        <div class="admin-claims-stat-grid">
+
+
+            <!-- TOTAL -->
+
+            <div class="admin-claims-stat-card">
+
+                <div class="admin-claims-stat-icon blue">
+                    ▧
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ total_claims }}
+                    </strong>
+
+                    <span>
+                        Total Claims
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PENDING -->
+
+            <div class="admin-claims-stat-card">
+
+                <div class="admin-claims-stat-icon orange">
+                    ◷
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ pending_claims }}
+                    </strong>
+
+                    <span>
+                        Under Review
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- APPROVED -->
+
+            <div class="admin-claims-stat-card">
+
+                <div class="admin-claims-stat-icon green">
+                    ✓
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ approved_claims }}
+                    </strong>
+
+                    <span>
+                        Approved
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- REJECTED -->
+
+            <div class="admin-claims-stat-card">
+
+                <div class="admin-claims-stat-icon red">
+                    !
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ rejected_claims }}
+                    </strong>
+
+                    <span>
+                        Rejected
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- SEARCH -->
+        <!-- ================================================= -->
+
+        <div class="admin-claims-search-card">
+
+            <div class="admin-claims-section-heading">
+
+                <div class="admin-claims-section-icon blue">
+                    ⌕
+                </div>
+
+                <div>
+
+                    <h2>
+                        Search Claims
+                    </h2>
+
+                    <p>
+                        Search by Claim ID or Policyholder Email.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <input
+                type="text"
+                id="adminClaimSearch"
+                class="admin-claims-search-input"
+                placeholder="Search by Claim ID or Policyholder Email..."
+                onkeyup="searchAdminClaims()"
+            >
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- CLAIMS TABLE -->
+        <!-- ================================================= -->
+
+        <div class="admin-claims-section-card">
+
+
+            <!-- SECTION HEADER -->
+
+            <div class="admin-claims-section-heading">
+
+                <div class="admin-claims-section-icon purple">
+                    ▧
+                </div>
+
+                <div>
+
+                    <h2>
+                        All Claims
+                    </h2>
+
+                    <p>
+                        Review claim details, risk levels,
+                        status, and assigned officers.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="admin-claims-table-wrapper">
+
+                <table
+                    id="adminClaimsTable"
+                    class="admin-claims-table"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Claim
+                            </th>
+
+                            <th>
+                                Policyholder
+                            </th>
+
+                            <th>
+                                Vehicle
+                            </th>
+
+                            <th>
+                                Incident Date
+                            </th>
+
+                            <th>
+                                Risk
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Assigned Officer
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <tbody>
+
+
+                        {% for claim in claims %}
+
+
+                        <tr>
+
+
+                            <!-- CLAIM -->
+
+                            <td>
+
+                                <div class="admin-claim-primary-cell">
+
+                                    <div class="admin-claim-row-icon">
+                                        #
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ claim.claim_id }}
+                                        </strong>
+
+                                        <small>
+                                            Claim ID
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- POLICYHOLDER -->
+
+                            <td>
+
+                                <div class="admin-claim-user-cell">
+
+                                    <div class="admin-claim-user-icon">
+                                        ♙
+                                    </div>
+
+                                    <span>
+                                        {{ claim.policyholder.email }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- VEHICLE -->
+
+                            <td>
+
+                                <div class="admin-claim-vehicle-cell">
+
+                                    <strong>
+                                        {{ claim.vehicle_make }}
+                                        {{ claim.vehicle_model }}
+                                    </strong>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- DATE -->
+
+                            <td>
+
+                                {{ claim.incident_date|date:"d M Y" }}
+
+                            </td>
+
+
+
+                            <!-- RISK -->
+
+                            <td>
+
+                                {% if claim.risk_level == 'low' %}
+
+                                    <span class="admin-claim-risk low">
+                                        Low
+                                    </span>
+
+                                {% elif claim.risk_level == 'medium' %}
+
+                                    <span class="admin-claim-risk medium">
+                                        Medium
+                                    </span>
+
+                                {% elif claim.risk_level == 'high' %}
+
+                                    <span class="admin-claim-risk high">
+                                        High
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="admin-claim-risk not-assessed">
+                                        Not Assessed
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                {% if claim.status == 'under_review' %}
+
+                                    <span class="status pending">
+                                        Under Review
+                                    </span>
+
+                                {% elif claim.status == 'approved' %}
+
+                                    <span class="status approved">
+                                        Approved
+                                    </span>
+
+                                {% elif claim.status == 'rejected' %}
+
+                                    <span class="status rejected">
+                                        Rejected
+                                    </span>
+
+                                {% elif claim.status == 'investigation' %}
+
+                                    <span class="status investigation">
+                                        Investigation Required
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status pending">
+                                        {{ claim.status|title }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <!-- ASSIGNED OFFICER -->
+
+                            <td>
+
+                                {% if claim.assigned_officer %}
+
+                                    <div class="admin-claim-officer-cell">
+
+                                        <div class="admin-claim-officer-icon">
+                                            ♙
+                                        </div>
+
+                                        <span>
+                                            {{ claim.assigned_officer.email }}
+                                        </span>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <span class="admin-claim-not-assigned">
+                                        Not Assigned
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <!-- ACTION -->
+
+                            <td>
+
+                                <a
+                                    href="/admin-claim/{{ claim.claim_id }}/"
+                                    class="admin-claim-view-button"
+                                >
+                                    View →
+                                </a>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="admin-claims-empty-cell"
+                            >
+
+                                <div class="admin-claims-empty-state">
+
+                                    <div class="admin-claims-empty-icon">
+                                        ▧
+                                    </div>
+
+                                    <h3>
+                                        No Claims Found
+                                    </h3>
+
+                                    <p>
+                                        There are currently no insurance
+                                        claims in the system.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- INFORMATION -->
+        <!-- ================================================= -->
+
+        <div class="admin-claims-info-card">
+
+            <div class="admin-claims-info-icon">
+                ℹ
+            </div>
+
+            <div>
+
+                <h3>
+                    Claims Management
+                </h3>
+
+                <p>
+                    Use the search field to quickly locate claims
+                    by Claim ID or policyholder email. Select
+                    <strong>View</strong> to inspect the complete
+                    claim information.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ========================================================= -->
+
+<script src="{% static 'js/app.js' %}"></script>
+
+
+</body>
+
+</html>

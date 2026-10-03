@@ -1,0 +1,1043 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Claim Details
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Welcome, {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================================= -->
+<!-- LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/dashboard/">
+
+            <span class="sidebar-icon">
+                ⌂
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <a
+            href="/my-claims/"
+            class="active"
+        >
+
+            <span class="sidebar-icon">
+                ▣
+            </span>
+
+            <span>
+                My Claims
+            </span>
+
+        </a>
+
+        {% if not has_policy %}
+        <a href="/available-policies/">
+
+            <span class="sidebar-icon">
+                ▤
+            </span>
+
+            <span>
+                Register New Policy
+            </span>
+
+        </a>
+        {% endif %}
+
+
+        <a href="/submit-claim/">
+
+            <span class="sidebar-icon">
+                +
+            </span>
+
+            <span>
+                Submit Claim
+            </span>
+
+        </a>
+
+
+        <a href="/profile/">
+
+            <span class="sidebar-icon">
+                ◯
+            </span>
+
+            <span>
+                Profile
+            </span>
+
+        </a>
+
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+
+            <span class="sidebar-icon">
+                ↪
+            </span>
+
+            <span>
+                Logout
+            </span>
+
+        </a>
+
+    </aside>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main claim-details-page">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-header">
+
+            <div>
+
+                <div class="claim-details-eyebrow">
+                    CLAIM DETAILS
+                </div>
+
+                <h1>
+                    Claim {{ claim.claim_id }}
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    View the details, progress, review decision,
+                    and supporting documents for your claim.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/my-claims/"
+                class="claim-details-back-button"
+            >
+                ← Back to My Claims
+            </a>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- STATUS HERO -->
+        <!-- ================================================= -->
+
+        <div class="claim-status-hero">
+
+
+            <div class="claim-status-hero-left">
+
+                <div class="claim-status-hero-icon">
+                    ▧
+                </div>
+
+                <div>
+
+                    <span class="claim-status-hero-label">
+                        CURRENT CLAIM STATUS
+                    </span>
+
+                    <strong>
+                        {{ claim.claim_id }}
+                    </strong>
+
+                    <small>
+                        Submitted for insurance review
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="claim-status-hero-right">
+
+                {% if claim.status == 'under_review' %}
+
+                    <span class="claim-details-status pending">
+                        Under Review
+                    </span>
+
+                {% elif claim.status == 'approved' %}
+
+                    <span class="claim-details-status approved">
+                        Approved
+                    </span>
+
+                {% elif claim.status == 'rejected' %}
+
+                    <span class="claim-details-status rejected">
+                        Rejected
+                    </span>
+
+                {% elif claim.status == 'investigation' %}
+
+                    <span class="claim-details-status investigation">
+                        Investigation Required
+                    </span>
+
+                {% else %}
+
+                    <span class="claim-details-status neutral">
+                        {{ claim.get_status_display }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- OFFICER REVIEW -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-section-card">
+
+
+            <div class="claim-details-section-heading">
+
+                <div class="claim-details-section-icon green">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h2>
+                        Officer Review
+                    </h2>
+
+                    <p>
+                        Review information and the latest decision
+                        on your claim.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            {% if claim.reviewed_by %}
+
+
+                <div class="claim-review-result">
+
+
+                    <div class="claim-review-result-top">
+
+                        <div>
+
+                            <span>
+                                Decision
+                            </span>
+
+                            {% if claim.status == 'approved' %}
+
+                                <span class="claim-details-status approved">
+                                    Approved
+                                </span>
+
+                            {% elif claim.status == 'rejected' %}
+
+                                <span class="claim-details-status rejected">
+                                    Rejected
+                                </span>
+
+                            {% elif claim.status == 'investigation' %}
+
+                                <span class="claim-details-status investigation">
+                                    Investigation Required
+                                </span>
+
+                            {% else %}
+
+                                <span class="claim-details-status pending">
+                                    {{ claim.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="claim-review-check">
+                            ✓ Reviewed
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="claim-review-info-grid">
+
+                        <div>
+
+                            <span>
+                                Reviewed By
+                            </span>
+
+                            <strong>
+                                {{ claim.reviewed_by.email }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Reviewed On
+                            </span>
+
+                            <strong>
+                                {{ claim.reviewed_at|date:"d M Y, h:i A" }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="claim-review-remarks">
+
+                        <span>
+                            Officer Remarks
+                        </span>
+
+                        <p>
+
+                            {% if claim.officer_remarks %}
+
+                                {{ claim.officer_remarks }}
+
+                            {% else %}
+
+                                No remarks were provided.
+
+                            {% endif %}
+
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="claim-review-pending">
+
+                    <div class="claim-review-pending-icon">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Claim Under Review
+                        </strong>
+
+                        <p>
+                            Your claim has been submitted and is
+                            currently being reviewed by a claim officer.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- POLICY DETAILS -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-section-card">
+
+
+            <div class="claim-details-section-heading">
+
+                <div class="claim-details-section-icon blue">
+                    ▤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Policy Details
+                    </h2>
+
+                    <p>
+                        Insurance policy associated with this claim.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="claim-details-info-grid">
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Policy Number
+                    </span>
+
+                    <strong>
+                        {{ claim.policy_number }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Policy Type
+                    </span>
+
+                    <strong>
+                        {{ claim.policy_type }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- VEHICLE DETAILS -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-section-card">
+
+
+            <div class="claim-details-section-heading">
+
+                <div class="claim-details-section-icon purple">
+                    🚗
+                </div>
+
+                <div>
+
+                    <h2>
+                        Vehicle Details
+                    </h2>
+
+                    <p>
+                        Vehicle information associated with the claim.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="claim-details-info-grid four">
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Vehicle Make
+                    </span>
+
+                    <strong>
+                        {{ claim.vehicle_make }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Vehicle Model
+                    </span>
+
+                    <strong>
+                        {{ claim.vehicle_model }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Vehicle Year
+                    </span>
+
+                    <strong>
+                        {{ claim.vehicle_year }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Registration Number
+                    </span>
+
+                    <strong>
+                        {{ claim.registration_number }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- INCIDENT DETAILS -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-section-card">
+
+
+            <div class="claim-details-section-heading">
+
+                <div class="claim-details-section-icon orange">
+                    !
+                </div>
+
+                <div>
+
+                    <h2>
+                        Accident Details
+                    </h2>
+
+                    <p>
+                        Information about the reported incident.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="claim-details-info-grid four">
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Accident Date
+                    </span>
+
+                    <strong>
+                        {{ claim.incident_date|date:"d M Y" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Accident Type
+                    </span>
+
+                    <strong>
+                        {{ claim.accident_type }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Location
+                    </span>
+
+                    <strong>
+                        {{ claim.accident_location }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Police Report
+                    </span>
+
+                    <strong>
+                        {{ claim.get_police_report_status_display }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <div class="claim-details-description">
+
+                <span>
+                    Description
+                </span>
+
+                <p>
+                    {{ claim.description }}
+                </p>
+
+            </div>
+
+
+            {% if claim.police_not_reported_reason %}
+
+                <div class="claim-details-note-box">
+
+                    <span>
+                        Police Reporting Note
+                    </span>
+
+                    <p>
+                        {{ claim.police_not_reported_reason }}
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- POLICE / FIR -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-section-card">
+
+
+            <div class="claim-details-section-heading">
+
+                <div class="claim-details-section-icon red">
+                    ⚑
+                </div>
+
+                <div>
+
+                    <h2>
+                        Police / FIR Details
+                    </h2>
+
+                    <p>
+                        Additional police report information,
+                        where applicable.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="claim-details-info-grid four">
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Report Number
+                    </span>
+
+                    <strong>
+                        {{ claim.police_report_number|default:"Not provided" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Police Station
+                    </span>
+
+                    <strong>
+                        {{ claim.police_station|default:"Not provided" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Report Date
+                    </span>
+
+                    <strong>
+
+                        {% if claim.police_report_date %}
+
+                            {{ claim.police_report_date|date:"d M Y" }}
+
+                        {% else %}
+
+                            Not provided
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Report Status
+                    </span>
+
+                    <strong>
+                        {{ claim.get_police_report_status_display }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- CLAIM DETAILS -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-section-card">
+
+
+            <div class="claim-details-section-heading">
+
+                <div class="claim-details-section-icon blue">
+                    ₹
+                </div>
+
+                <div>
+
+                    <h2>
+                        Claim Details
+                    </h2>
+
+                    <p>
+                        Financial information related to your claim.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="claim-details-info-grid three">
+
+
+                <div class="claim-details-info-item highlight">
+
+                    <span>
+                        Estimated Damage
+                    </span>
+
+                    <strong>
+                        ₹{{ claim.estimated_damage }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item highlight">
+
+                    <span>
+                        Claim Amount
+                    </span>
+
+                    <strong>
+                        ₹{{ claim.claim_amount }}
+                    </strong>
+
+                </div>
+
+
+                <div class="claim-details-info-item">
+
+                    <span>
+                        Previous Claims
+                    </span>
+
+                    <strong>
+                        {{ claim.previous_claims }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="claim-details-description">
+
+                <span>
+                    Damage Description
+                </span>
+
+                <p>
+                    {{ claim.damage_description|default:"No damage description provided." }}
+                </p>
+
+            </div>
+
+
+            {% if claim.damaged_parts %}
+
+                <div class="claim-details-note-box">
+
+                    <span>
+                        Damaged Parts
+                    </span>
+
+                    <p>
+                        {{ claim.damaged_parts }}
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- SUPPORTING DOCUMENTS -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-section-card">
+
+
+            <div class="claim-details-section-heading">
+
+                <div class="claim-details-section-icon orange">
+                    ▤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Supporting Documents
+                    </h2>
+
+                    <p>
+                        Documents submitted with this claim.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if documents %}
+
+
+                <div class="claim-details-document-list">
+
+
+                    {% for document in documents %}
+
+                    <div class="claim-details-document-card">
+
+
+                        <div class="claim-details-document-icon">
+                            ▤
+                        </div>
+
+
+                        <div class="claim-details-document-info">
+
+                            <strong>
+                                {{ document.get_document_type_display }}
+                            </strong>
+
+                            <span>
+                                Supporting claim document
+                            </span>
+
+                        </div>
+
+
+                        <a
+                            href="{{ document.file.url }}"
+                            target="_blank"
+                            class="claim-details-document-button"
+                        >
+                            View Document →
+                        </a>
+
+
+                    </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="claim-details-no-documents">
+
+                    <div>
+                        ▤
+                    </div>
+
+                    <p>
+                        No documents were uploaded with this claim.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- BACK -->
+        <!-- ================================================= -->
+
+        <div class="claim-details-bottom-action">
+
+            <a
+                href="/my-claims/"
+                class="claim-details-back-button"
+            >
+                ← Back to My Claims
+            </a>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

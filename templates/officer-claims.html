@@ -1,0 +1,580 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Claims</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Officer: {{ user.email }}
+            </span>
+
+            <a href="{% url 'logout' %}">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- LAYOUT -->
+    <!-- ================================================== -->
+
+    <div class="dashboard-container">
+
+
+        <!-- ================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ================================================== -->
+
+        <aside class="sidebar">
+
+            <a href="/officer-dashboard/">
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="/officer-claims/"
+                class="active"
+            >
+                <span class="sidebar-icon">▣</span>
+                <span>Claims</span>
+            </a>
+
+
+            <a href="/officer-pending/">
+                <span class="sidebar-icon">◷</span>
+                <span>Pending Review</span>
+            </a>
+
+
+            <a href="/officer-reports/">
+                <span class="sidebar-icon">▤</span>
+                <span>Reports</span>
+            </a>
+
+
+            <a href="/profile/">
+                <span class="sidebar-icon">◯</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="/logout/"
+                class="sidebar-logout"
+            >
+                <span class="sidebar-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+
+
+        <!-- ================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================== -->
+
+        <main class="dashboard-main officer-claims-page">
+
+
+            <!-- ================================================== -->
+            <!-- PAGE HEADER -->
+            <!-- ================================================== -->
+
+            <div class="claims-page-header">
+
+                <div>
+
+                    <div class="claims-eyebrow">
+                        CLAIM MANAGEMENT
+                    </div>
+
+                    <h1>
+                        Claims
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        Search and review submitted insurance claims.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- SEARCH SECTION -->
+            <!-- ================================================== -->
+
+            <div class="claims-section officer-search-card">
+
+
+                <div class="officer-section-header">
+
+                    <div>
+
+                        <h2>
+                           ⌕ Search Claims
+                        </h2>
+
+                        <p>
+                            Find claims by claim ID, status, or risk level.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="form-row">
+
+
+                    <!-- Claim ID -->
+
+                    <div>
+
+                        <label for="claimSearch">
+                            Search by Claim ID
+                        </label>
+
+                        <input
+                            type="text"
+                            id="claimSearch"
+                            placeholder="Example: CLM001"
+                            onkeyup="filterClaims()"
+                        >
+
+                    </div>
+
+
+
+                    <!-- Status -->
+
+                    <div>
+
+                        <label for="statusFilter">
+                            Status
+                        </label>
+
+                        <select
+                            id="statusFilter"
+                            onchange="filterClaims()"
+                        >
+
+                            <option value="all">
+                                All
+                            </option>
+
+                            <option value="Under Review">
+                                Under Review
+                            </option>
+
+                            <option value="Approved">
+                                Approved
+                            </option>
+
+                            <option value="Rejected">
+                                Rejected
+                            </option>
+
+                            <option value="Investigation Required">
+                                Investigation Required
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+
+                    <!-- Risk -->
+
+                    <div>
+
+                        <label for="riskFilter">
+                            Risk Level
+                        </label>
+
+                        <select
+                            id="riskFilter"
+                            onchange="filterClaims()"
+                        >
+
+                            <option value="all">
+                                All
+                            </option>
+
+                            <option value="Low">
+                                Low
+                            </option>
+
+                            <option value="Medium">
+                                Medium
+                            </option>
+
+                            <option value="High">
+                                High
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- CLAIMS TABLE -->
+            <!-- ================================================== -->
+
+            <div class="claims-section officer-all-claims-card">
+
+
+                <div class="officer-section-header">
+
+                    
+                    <div>
+
+                        <h2>
+                            All Claims
+                        </h2>
+
+                        <p>
+                            Review submitted claims and their current status.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                {% if claims %}
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Claim ID
+                                </th>
+
+                                <th>
+                                    Policyholder
+                                </th>
+
+                                <th>
+                                    Vehicle
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Risk
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="claimsTable">
+
+
+                            {% for claim in claims %}
+
+                            <tr>
+
+
+                                <!-- Claim ID -->
+
+                                <td class="claim-id">
+
+                                    <div class="claim-id-cell">
+
+
+                                        <strong>
+                                            {{ claim.claim_id }}
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- Policyholder -->
+
+                                <td>
+
+                                    <div class="policyholder-cell">
+
+                                        
+
+                                        <span>
+                                            {{ claim.policyholder.email }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- Vehicle -->
+
+                                <td>
+
+                                    <div class="vehicle-cell">
+
+                                        <span class="vehicle-row-icon">
+                                            🚗
+                                        </span>
+
+                                        <span>
+                                            {{ claim.vehicle_make }}
+                                            {{ claim.vehicle_model }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- Date -->
+
+                                <td>
+
+                                    <span class="date-cell">
+                                        {{ claim.incident_date|date:"d M Y" }}
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- Risk -->
+
+                                <td class="risk">
+
+
+                                    {% if claim.risk_level == 'low' %}
+
+                                        <span class="status approved">
+                                            Low
+                                        </span>
+
+
+                                    {% elif claim.risk_level == 'medium' %}
+
+                                        <span class="status pending">
+                                            Medium
+                                        </span>
+
+
+                                    {% elif claim.risk_level == 'high' %}
+
+                                        <span class="status rejected">
+                                            High
+                                        </span>
+
+
+                                    {% else %}
+
+                                        <span class="status pending">
+                                            Not Assessed
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- Status -->
+
+                                <td class="claim-status">
+
+
+                                    {% if claim.status == 'under_review' %}
+
+                                        <span class="status pending">
+                                            Under Review
+                                        </span>
+
+
+                                    {% elif claim.status == 'approved' %}
+
+                                        <span class="status approved">
+                                            Approved
+                                        </span>
+
+
+                                    {% elif claim.status == 'rejected' %}
+
+                                        <span class="status rejected">
+                                            Rejected
+                                        </span>
+
+
+                                    {% elif claim.status == 'investigation' %}
+
+                                        <span class="status investigation">
+                                            Investigation Required
+                                        </span>
+
+
+                                    {% else %}
+
+                                        <span class="status pending">
+                                            {{ claim.status }}
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- Action -->
+
+                                <td>
+
+                                    <a
+                                        href="{% url 'officer_claim_review' claim.claim_id %}"
+                                        class="view-link officer-review-link"
+                                    >
+                                        Review →
+                                    </a>
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- JavaScript No Results -->
+
+                <p
+                    id="noResults"
+                    class="officer-no-results"
+                >
+                    No claims match your search or filters.
+                </p>
+
+
+                {% else %}
+
+
+                <div class="officer-empty-state">
+
+                    <div class="officer-empty-icon">
+                        ▣
+                    </div>
+
+                    <h3>
+                        No Claims Found
+                    </h3>
+
+                    <p>
+                        There are currently no submitted claims to display.
+                    </p>
+
+                </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+
+    <!-- ================================================== -->
+    <!-- JAVASCRIPT -->
+    <!-- ================================================== -->
+
+    <script src="{% static 'js/app.js' %}"></script>
+
+
+</body>
+
+</html>

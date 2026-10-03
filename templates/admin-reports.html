@@ -1,0 +1,2018 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Admin Reports
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Administrator: {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================================= -->
+<!-- DASHBOARD LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/admin-dashboard/">
+            <span class="sidebar-icon">▣</span>
+            Dashboard
+        </a>
+
+        <a href="/admin-policyholders/">
+            <span class="sidebar-icon">♙</span>
+            Policyholders
+        </a>
+
+        <a href="/admin-officers/">
+            <span class="sidebar-icon">♙</span>
+            Insurance Officers
+        </a>
+
+        <a href="/admin-insurance-plans/">
+            <span class="sidebar-icon">▤</span>
+            Insurance Plans
+        </a>
+
+        <a href="/admin-claims/">
+            <span class="sidebar-icon">▧</span>
+            Claims
+        </a>
+
+        <a
+            href="/admin-reports/"
+            class="active"
+        >
+            <span class="sidebar-icon">◫</span>
+            Reports
+        </a>
+
+        <a href="/profile/">
+            <span class="sidebar-icon">⚙</span>
+            Profile
+        </a>
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+            <span class="sidebar-icon">↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main admin-reports-page">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <div class="admin-reports-header">
+
+            <div>
+
+                <div class="admin-reports-eyebrow">
+                    REPORTS & ANALYTICS
+                </div>
+
+                <h1>
+                    Claims Reports
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    Monitor claim activity, AI risk distribution,
+                    financial performance, and officer workload.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- KPI CARDS -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-kpi-grid">
+
+
+            <!-- TOTAL CLAIMS -->
+
+            <div class="admin-report-kpi-card">
+
+                <div class="admin-report-kpi-icon blue">
+                    ▧
+                </div>
+
+                <div class="admin-report-kpi-content">
+
+                    <span>
+                        Total Claims
+                    </span>
+
+                    <strong>
+                        {{ total_claims }}
+                    </strong>
+
+                    <small>
+                        All submitted claims
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- APPROVED -->
+
+            <div class="admin-report-kpi-card">
+
+                <div class="admin-report-kpi-icon green">
+                    ✓
+                </div>
+
+                <div class="admin-report-kpi-content">
+
+                    <span>
+                        Approved Claims
+                    </span>
+
+                    <strong>
+                        {{ approved_claims }}
+                    </strong>
+
+                    <small>
+                        {{ approved_percentage }}% of all claims
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- UNDER REVIEW -->
+
+            <div class="admin-report-kpi-card">
+
+                <div class="admin-report-kpi-icon orange">
+                    ◷
+                </div>
+
+                <div class="admin-report-kpi-content">
+
+                    <span>
+                        Under Review
+                    </span>
+
+                    <strong>
+                        {{ pending_claims }}
+                    </strong>
+
+                    <small>
+                        {{ pending_percentage }}% of all claims
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SUSPICIOUS -->
+
+            <div class="admin-report-kpi-card">
+
+                <div class="admin-report-kpi-icon red">
+                    !
+                </div>
+
+                <div class="admin-report-kpi-content">
+
+                    <span>
+                        Suspicious Claims
+                    </span>
+
+                    <strong>
+                        {{ suspicious_claims_count }}
+                    </strong>
+
+                    <small>
+                        Requires additional review
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- CHARTS - ROW 1 -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-chart-grid">
+
+
+            <!-- CLAIM TREND -->
+
+            <div class="admin-report-panel">
+
+                <div class="admin-report-panel-header">
+
+                    <div class="admin-report-heading-icon blue">
+                        ↗
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Claims Over Time
+                        </h2>
+
+                        <p>
+                            Monthly claim submission trend
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-report-chart-box">
+
+                    <canvas
+                        id="claimsTrendChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RISK -->
+
+            <div class="admin-report-panel">
+
+                <div class="admin-report-panel-header">
+
+                    <div class="admin-report-heading-icon purple">
+                        ◉
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            AI Risk Distribution
+                        </h2>
+
+                        <p>
+                            Risk levels predicted by the AI model
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-report-donut-box">
+
+                    <canvas
+                        id="riskChart"
+                    ></canvas>
+
+                </div>
+
+
+                <div class="admin-report-risk-summary">
+
+
+                    <div class="admin-report-risk-item">
+
+                        <span class="admin-report-risk-dot low"></span>
+
+                        <span>
+                            Low
+                        </span>
+
+                        <strong>
+                            {{ low_risk }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="admin-report-risk-item">
+
+                        <span class="admin-report-risk-dot medium"></span>
+
+                        <span>
+                            Medium
+                        </span>
+
+                        <strong>
+                            {{ medium_risk }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="admin-report-risk-item">
+
+                        <span class="admin-report-risk-dot high"></span>
+
+                        <span>
+                            High
+                        </span>
+
+                        <strong>
+                            {{ high_risk }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- CHARTS - ROW 2 -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-chart-grid">
+
+
+            <!-- STATUS -->
+
+            <div class="admin-report-panel">
+
+                <div class="admin-report-panel-header">
+
+                    <div class="admin-report-heading-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Claim Status
+                        </h2>
+
+                        <p>
+                            Current outcome of submitted claims
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-report-chart-box">
+
+                    <canvas
+                        id="statusChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- INCIDENT TYPE -->
+
+            <div class="admin-report-panel">
+
+                <div class="admin-report-panel-header">
+
+                    <div class="admin-report-heading-icon orange">
+                        !
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Claims by Incident Type
+                        </h2>
+
+                        <p>
+                            Distribution of reported incident types
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-report-chart-box">
+
+                    <canvas
+                        id="accidentChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <div class="report-panel">
+
+    <div class="report-panel-header">
+
+        <div>
+
+            <h2>
+                Claims by Accident Location
+            </h2>
+
+            <p>
+                Locations with the highest number of reported claims
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="report-chart-container">
+
+        <canvas
+            id="locationChart"
+        ></canvas>
+
+    </div>
+
+</div>
+
+
+
+        <!-- ================================================= -->
+        <!-- FINANCIAL OVERVIEW -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-panel">
+
+
+            <div class="admin-report-panel-header">
+
+                <div class="admin-report-heading-icon blue">
+                    ₹
+                </div>
+
+                <div>
+
+                    <h2>
+                        Financial Overview
+                    </h2>
+
+                    <p>
+                        Premiums, damage estimates, and claim amounts
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-report-financial-grid">
+
+
+                <div class="admin-report-financial-card">
+
+                    <span>
+                        Total Premiums
+                    </span>
+
+                    <strong>
+                        ₹{{ total_premiums|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-report-financial-card">
+
+                    <span>
+                        Estimated Damage
+                    </span>
+
+                    <strong>
+                        ₹{{ total_estimated_damage|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-report-financial-card">
+
+                    <span>
+                        Total Claim Amount
+                    </span>
+
+                    <strong>
+                        ₹{{ total_claim_amount|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-report-financial-card green">
+
+                    <span>
+                        Approved Payout
+                    </span>
+
+                    <strong>
+                        ₹{{ total_claim_payouts|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-report-financial-card orange">
+
+                    <span>
+                        Pending Claim Amount
+                    </span>
+
+                    <strong>
+                        ₹{{ pending_claim_amount|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-report-financial-card purple">
+
+                    <span>
+                        Average Claim
+                    </span>
+
+                    <strong>
+                        ₹{{ average_claim_amount|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- STATUS SUMMARY -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-panel">
+
+
+            <div class="admin-report-panel-header">
+
+                <div class="admin-report-heading-icon blue">
+                    ▤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Claim Status Summary
+                    </h2>
+
+                    <p>
+                        Detailed breakdown of current claim outcomes
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-report-status-grid">
+
+
+                <!-- APPROVED -->
+
+                <div class="admin-report-status-card green">
+
+                    <span>
+                        Approved
+                    </span>
+
+                    <strong>
+                        {{ approved_claims }}
+                    </strong>
+
+                    <small>
+                        {{ approved_percentage }}%
+                    </small>
+
+                </div>
+
+
+
+                <!-- REJECTED -->
+
+                <div class="admin-report-status-card red">
+
+                    <span>
+                        Rejected
+                    </span>
+
+                    <strong>
+                        {{ rejected_claims }}
+                    </strong>
+
+                    <small>
+                        {{ rejected_percentage }}%
+                    </small>
+
+                </div>
+
+
+
+                <!-- UNDER REVIEW -->
+
+                <div class="admin-report-status-card orange">
+
+                    <span>
+                        Under Review
+                    </span>
+
+                    <strong>
+                        {{ pending_claims }}
+                    </strong>
+
+                    <small>
+                        {{ pending_percentage }}%
+                    </small>
+
+                </div>
+
+
+
+                <!-- INVESTIGATION -->
+
+                <div class="admin-report-status-card purple">
+
+                    <span>
+                        Investigation
+                    </span>
+
+                    <strong>
+                        {{ investigation_claims }}
+                    </strong>
+
+                    <small>
+                        {{ investigation_percentage }}%
+                    </small>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- OFFICER PERFORMANCE -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-panel">
+
+
+            <div class="admin-report-panel-header">
+
+                <div class="admin-report-heading-icon purple">
+                    ♙
+                </div>
+
+                <div>
+
+                    <h2>
+                        Officer Claim Processing
+                    </h2>
+
+                    <p>
+                        Workload and processing performance
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-report-table-wrapper">
+
+                <table class="admin-report-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Officer
+                            </th>
+
+                            <th>
+                                Assigned
+                            </th>
+
+                            <th>
+                                Reviewed
+                            </th>
+
+                            <th>
+                                Pending
+                            </th>
+
+                            <th>
+                                Approved
+                            </th>
+
+                            <th>
+                                Rejected
+                            </th>
+
+                            <th>
+                                Avg. Processing
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for officer in officers %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="admin-report-officer-cell">
+
+                                    <div class="admin-report-officer-icon">
+                                        ♙
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ officer.email }}
+                                        </strong>
+
+                                        <small>
+                                            OFF{{ officer.id|stringformat:"03d" }}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+                                {{ officer.assigned_claims_count }}
+                            </td>
+
+
+                            <td>
+                                {{ officer.reviewed_claims_count }}
+                            </td>
+
+
+                            <td>
+                                {{ officer.pending_claims_count }}
+                            </td>
+
+
+                            <td>
+                                <span class="admin-report-number green">
+                                    {{ officer.approved_claims_count }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span class="admin-report-number red">
+                                    {{ officer.rejected_claims_count }}
+                                </span>
+                            </td>
+
+
+                            <td>
+
+                                {% if officer.average_processing_days > 0 %}
+
+                                    {{ officer.average_processing_days }}
+                                    day{{ officer.average_processing_days|pluralize }}
+
+                                {% else %}
+
+                                    <span class="admin-report-muted">
+                                        Not available
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="admin-report-empty-table"
+                            >
+                                No claim officers found.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- SUSPICIOUS CLAIMS -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-panel admin-report-audit-panel">
+
+
+            <div class="admin-report-panel-header">
+
+                <div class="admin-report-heading-icon red">
+                    !
+                </div>
+
+                <div>
+
+                    <h2>
+                        Fraud / Suspicious Claim Audit
+                    </h2>
+
+                    <p>
+                        Claims flagged for additional verification
+                        or investigation.
+                    </p>
+
+                </div>
+
+
+                <div class="admin-report-flagged-count">
+
+                    <strong>
+                        {{ suspicious_claims_count }}
+                    </strong>
+
+                    <span>
+                        flagged
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-report-table-wrapper">
+
+                <table class="admin-report-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Claim
+                            </th>
+
+                            <th>
+                                Policyholder
+                            </th>
+
+                            <th>
+                                Claim Amount
+                            </th>
+
+                            <th>
+                                Estimated Damage
+                            </th>
+
+                            <th>
+                                Risk
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for claim in suspicious_claims %}
+
+                        <tr>
+
+
+                            <td>
+
+                                <strong>
+                                    {{ claim.claim_id }}
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+                                {{ claim.policyholder.email }}
+                            </td>
+
+
+                            <td>
+
+                                {% if claim.claim_amount %}
+
+                                    ₹{{ claim.claim_amount|floatformat:2 }}
+
+                                {% else %}
+
+                                    <span class="admin-report-muted">
+                                        Not specified
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if claim.estimated_damage %}
+
+                                    ₹{{ claim.estimated_damage|floatformat:2 }}
+
+                                {% else %}
+
+                                    <span class="admin-report-muted">
+                                        Not specified
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if claim.risk_level == 'high' %}
+
+                                    <span class="admin-report-badge high">
+                                        High
+                                    </span>
+
+                                {% elif claim.risk_level == 'medium' %}
+
+                                    <span class="admin-report-badge medium">
+                                        Medium
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="admin-report-badge low">
+                                        Low
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if claim.status == 'investigation' %}
+
+                                    <span class="admin-report-badge high">
+                                        Investigation
+                                    </span>
+
+                                {% elif claim.status == 'under_review' %}
+
+                                    <span class="admin-report-badge medium">
+                                        Under Review
+                                    </span>
+
+                                {% elif claim.status == 'approved' %}
+
+                                    <span class="admin-report-badge low">
+                                        Approved
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="admin-report-badge high">
+                                        Rejected
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <a
+                                    href="/admin-claim/{{ claim.claim_id }}/"
+                                    class="admin-report-view-link"
+                                >
+                                    View →
+                                </a>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="admin-report-empty-table"
+                            >
+                                No suspicious claims detected.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- RECENT CLAIMS -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-panel">
+
+
+            <div class="admin-report-panel-header">
+
+                <div class="admin-report-heading-icon blue">
+                    ◷
+                </div>
+
+                <div>
+
+                    <h2>
+                        Recent Claims
+                    </h2>
+
+                    <p>
+                        Latest claims submitted to ClaimIntel
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-report-table-wrapper">
+
+                <table class="admin-report-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Claim
+                            </th>
+
+                            <th>
+                                Policyholder
+                            </th>
+
+                            <th>
+                                Incident Type
+                            </th>
+
+                            <th>
+                                Risk
+                            </th>
+
+                            <th>
+                                Claim Amount
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for claim in recent_claims %}
+
+                        <tr>
+
+
+                            <td>
+
+                                <strong>
+                                    {{ claim.claim_id }}
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+                                {{ claim.policyholder.email }}
+                            </td>
+
+
+                            <td>
+                                {{ claim.accident_type|default:"Not specified" }}
+                            </td>
+
+
+                            <td>
+
+                                {% if claim.risk_level == 'high' %}
+
+                                    <span class="admin-report-badge high">
+                                        High
+                                    </span>
+
+                                {% elif claim.risk_level == 'medium' %}
+
+                                    <span class="admin-report-badge medium">
+                                        Medium
+                                    </span>
+
+                                {% elif claim.risk_level == 'low' %}
+
+                                    <span class="admin-report-badge low">
+                                        Low
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="admin-report-badge neutral">
+                                        Pending
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if claim.claim_amount %}
+
+                                    ₹{{ claim.claim_amount|floatformat:2 }}
+
+                                {% else %}
+
+                                    <span class="admin-report-muted">
+                                        Not specified
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if claim.status == 'approved' %}
+
+                                    <span class="admin-report-badge low">
+                                        Approved
+                                    </span>
+
+                                {% elif claim.status == 'rejected' %}
+
+                                    <span class="admin-report-badge high">
+                                        Rejected
+                                    </span>
+
+                                {% elif claim.status == 'investigation' %}
+
+                                    <span class="admin-report-badge high">
+                                        Investigation
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="admin-report-badge medium">
+                                        Under Review
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if claim.created_at %}
+
+                                    {{ claim.created_at|date:"d M Y" }}
+
+                                {% else %}
+
+                                    -
+
+                                {% endif %}
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="admin-report-empty-table"
+                            >
+                                No claims available.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- AI NOTICE -->
+        <!-- ================================================= -->
+
+        <div class="admin-report-ai-notice">
+
+            <div class="admin-report-ai-icon">
+                🧠
+            </div>
+
+            <div>
+
+                <strong>
+                    AI Decision Support
+                </strong>
+
+                <p>
+                    AI risk predictions and suspicious-claim indicators
+                    are provided as decision-support information only.
+                    Final claim decisions remain with authorized
+                    insurance officers.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- ========================================================= -->
+<!-- CHART DATA -->
+<!-- ========================================================= -->
+
+<script
+    id="monthLabelsData"
+    type="application/json"
+>
+    {{ month_chart_labels|safe }}
+</script>
+
+
+<script
+    id="monthValuesData"
+    type="application/json"
+>
+    {{ month_chart_data|safe }}
+</script>
+
+
+<script
+    id="riskData"
+    type="application/json"
+>
+    {{ risk_chart_data|safe }}
+</script>
+
+
+<script
+    id="statusData"
+    type="application/json"
+>
+    {{ status_chart_data|safe }}
+</script>
+
+
+<script
+    id="accidentLabelsData"
+    type="application/json"
+>
+    {{ accident_chart_labels|safe }}
+</script>
+
+
+<script
+    id="accidentValuesData"
+    type="application/json"
+>
+    {{ accident_chart_data|safe }}
+</script>
+
+<script
+    id="locationLabelsData"
+    type="application/json"
+>
+    {{ location_chart_labels|safe }}
+</script>
+
+<script
+    id="locationValuesData"
+    type="application/json"
+>
+    {{ location_chart_data|safe }}
+</script>
+
+
+
+<!-- ========================================================= -->
+<!-- CHARTS -->
+<!-- ========================================================= -->
+
+<script>
+
+    /* ========================================================
+       READ DJANGO DATA
+       ======================================================== */
+
+    const monthLabels = JSON.parse(
+        document.getElementById(
+            'monthLabelsData'
+        ).textContent
+    );
+
+    const monthValues = JSON.parse(
+        document.getElementById(
+            'monthValuesData'
+        ).textContent
+    );
+
+    const riskData = JSON.parse(
+        document.getElementById(
+            'riskData'
+        ).textContent
+    );
+
+    const statusData = JSON.parse(
+        document.getElementById(
+            'statusData'
+        ).textContent
+    );
+
+    const accidentLabels = JSON.parse(
+        document.getElementById(
+            'accidentLabelsData'
+        ).textContent
+    );
+
+    const accidentData = JSON.parse(
+        document.getElementById(
+            'accidentValuesData'
+        ).textContent
+    );
+    const locationLabels = JSON.parse(
+    document.getElementById(
+        'locationLabelsData'
+    ).textContent
+);
+
+const locationData = JSON.parse(
+    document.getElementById(
+        'locationValuesData'
+    ).textContent
+);
+
+
+new Chart(
+    document.getElementById(
+        'locationChart'
+    ),
+    {
+
+        type: 'bar',
+
+        data: {
+
+            labels: locationLabels,
+
+            datasets: [
+
+                {
+
+                    label: 'Claims',
+
+                    data: locationData,
+
+                    borderWidth: 1
+
+                }
+
+            ]
+
+        },
+
+        options: {
+
+            indexAxis: 'y',
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            plugins: {
+
+                legend: {
+                    display: false
+                }
+
+            },
+
+            scales: {
+
+                x: {
+
+                    beginAtZero: true,
+
+                    ticks: {
+                        precision: 0
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+);
+
+
+
+    /* ========================================================
+       COMMON CHART SETTINGS
+       ======================================================== */
+
+    const chartTextColor = '#627d98';
+    const chartGridColor = '#edf2f7';
+    const chartPrimary = '#1976d2';
+    const chartGreen = '#2f855a';
+    const chartOrange = '#b7791f';
+    const chartRed = '#c53030';
+    const chartPurple = '#6b46c1';
+
+
+
+    /* ========================================================
+       CLAIM TREND
+       ======================================================== */
+
+    new Chart(
+        document.getElementById(
+            'claimsTrendChart'
+        ),
+        {
+
+            type: 'line',
+
+            data: {
+
+                labels: monthLabels,
+
+                datasets: [
+
+                    {
+
+                        label: 'Claims',
+
+                        data: monthValues,
+
+                        borderColor: chartPrimary,
+
+                        backgroundColor:
+                            'rgba(25, 118, 210, 0.08)',
+
+                        borderWidth: 3,
+
+                        tension: 0.35,
+
+                        fill: true,
+
+                        pointRadius: 4,
+
+                        pointHoverRadius: 6,
+
+                        pointBackgroundColor: chartPrimary,
+
+                        pointBorderWidth: 2,
+
+                        pointBorderColor: '#ffffff'
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+                        padding: 10,
+                        displayColors: false
+                    }
+
+                },
+
+                scales: {
+
+                    x: {
+
+                        grid: {
+                            display: false
+                        },
+
+                        ticks: {
+                            color: chartTextColor
+                        }
+
+                    },
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            precision: 0,
+                            color: chartTextColor
+                        },
+
+                        grid: {
+                            color: chartGridColor
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+
+    /* ========================================================
+       AI RISK DISTRIBUTION
+       ======================================================== */
+
+    new Chart(
+        document.getElementById(
+            'riskChart'
+        ),
+        {
+
+            type: 'doughnut',
+
+            data: {
+
+                labels: [
+                    'Low',
+                    'Medium',
+                    'High'
+                ],
+
+                datasets: [
+
+                    {
+
+                        data: riskData,
+
+                        backgroundColor: [
+                            chartGreen,
+                            chartOrange,
+                            chartRed
+                        ],
+
+                        borderColor: '#ffffff',
+
+                        borderWidth: 3,
+
+                        hoverOffset: 5
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                cutout: '68%',
+
+                plugins: {
+
+                    legend: {
+
+                        position: 'bottom',
+
+                        labels: {
+
+                            color: chartTextColor,
+
+                            padding: 18,
+
+                            usePointStyle: true,
+
+                            pointStyle: 'circle'
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+
+    /* ========================================================
+       CLAIM STATUS
+       ======================================================== */
+
+    new Chart(
+        document.getElementById(
+            'statusChart'
+        ),
+        {
+
+            type: 'bar',
+
+            data: {
+
+                labels: [
+                    'Approved',
+                    'Rejected',
+                    'Under Review',
+                    'Investigation'
+                ],
+
+                datasets: [
+
+                    {
+
+                        label: 'Claims',
+
+                        data: statusData,
+
+                        backgroundColor: [
+                            chartGreen,
+                            chartRed,
+                            chartOrange,
+                            chartPurple
+                        ],
+
+                        borderRadius: 7,
+
+                        borderSkipped: false
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+                        displayColors: false,
+                        padding: 10
+                    }
+
+                },
+
+                scales: {
+
+                    x: {
+
+                        grid: {
+                            display: false
+                        },
+
+                        ticks: {
+                            color: chartTextColor
+                        }
+
+                    },
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            precision: 0,
+                            color: chartTextColor
+                        },
+
+                        grid: {
+                            color: chartGridColor
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+
+
+    /* ========================================================
+       INCIDENT TYPE
+       ======================================================== */
+
+    new Chart(
+        document.getElementById(
+            'accidentChart'
+        ),
+        {
+
+            type: 'bar',
+
+            data: {
+
+                labels: accidentLabels,
+
+                datasets: [
+
+                    {
+
+                        label: 'Claims',
+
+                        data: accidentData,
+
+                        backgroundColor: chartPrimary,
+
+                        borderRadius: 6,
+
+                        borderSkipped: false
+
+                    }
+
+                ]
+
+            },
+
+            options: {
+
+                indexAxis: 'y',
+
+                responsive: true,
+
+                maintainAspectRatio: false,
+
+                plugins: {
+
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+                        displayColors: false,
+                        padding: 10
+                    }
+
+                },
+
+                scales: {
+
+                    x: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            precision: 0,
+                            color: chartTextColor
+                        },
+
+                        grid: {
+                            color: chartGridColor
+                        }
+
+                    },
+
+                    y: {
+
+                        ticks: {
+                            color: chartTextColor
+                        },
+
+                        grid: {
+                            display: false
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>

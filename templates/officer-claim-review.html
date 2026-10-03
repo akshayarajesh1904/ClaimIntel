@@ -1,0 +1,1677 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Review Claim
+    </title>
+
+    <link
+    rel="stylesheet"
+    href="{% static 'css/style.css' %}?v=2"
+>
+
+</head>
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Officer: {{ user.email }}
+            </span>
+
+            <a href="{% url 'logout' %}">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- LAYOUT -->
+    <!-- ================================================== -->
+
+    <div class="dashboard-container">
+
+
+        <!-- ================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ================================================== -->
+
+        <aside class="sidebar">
+
+            <a href="{% url 'officer_dashboard' %}">
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="{% url 'officer_claims' %}"
+                class="active"
+            >
+                <span class="sidebar-icon">▣</span>
+                <span>Claims</span>
+            </a>
+
+
+            <a href="{% url 'officer_pending' %}">
+                <span class="sidebar-icon">◷</span>
+                <span>Pending Review</span>
+            </a>
+
+
+            <a href="{% url 'officer_reports' %}">
+                <span class="sidebar-icon">▤</span>
+                <span>Reports</span>
+            </a>
+
+
+            <a href="/profile/">
+                <span class="sidebar-icon">◯</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="{% url 'logout' %}"
+                class="sidebar-logout"
+            >
+                <span class="sidebar-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+
+
+        <!-- ================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================== -->
+
+        <main class="dashboard-main claim-review-page">
+
+
+            <!-- ================================================== -->
+            <!-- PAGE HEADER -->
+            <!-- ================================================== -->
+
+            <div class="claim-review-header">
+
+                <div>
+
+                    <div class="claim-review-eyebrow">
+                        CLAIM REVIEW
+                    </div>
+
+                    <h1>
+                        Review Claim {{ claim.claim_id }}
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        Review the claim information, AI assessment
+                        and supporting documents.
+                    </p>
+
+                </div>
+
+
+                <div class="claim-review-status-box">
+
+                    <span class="claim-status-label">
+                        Current Status
+                    </span>
+
+
+                    {% if claim.status == 'under_review' %}
+
+                        <span class="status pending">
+                            Under Review
+                        </span>
+
+                    {% elif claim.status == 'approved' %}
+
+                        <span class="status approved">
+                            Approved
+                        </span>
+
+                    {% elif claim.status == 'rejected' %}
+
+                        <span class="status rejected">
+                            Rejected
+                        </span>
+
+                    {% elif claim.status == 'investigation' %}
+
+                        <span class="status investigation">
+                            Investigation Required
+                        </span>
+
+                    {% else %}
+
+                        <span class="status pending">
+                            {{ claim.status }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 1. POLICYHOLDER INFORMATION -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon blue">
+                        ◯
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            01
+                        </span>
+
+                        <h2>
+                            Policyholder Information
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-info-grid">
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Email
+                        </span>
+
+                        <strong>
+                            {{ claim.policyholder.email }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Username
+                        </span>
+
+                        <strong>
+                            {{ claim.policyholder.username }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 2. POLICY DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon purple">
+                        ▤
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            02
+                        </span>
+
+                        <h2>
+                            Policy Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-info-grid">
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Policy Number
+                        </span>
+
+                        <strong>
+                            {{ claim.policy_number|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Policy Type
+                        </span>
+
+                        <strong>
+                            {{ claim.policy_type|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 3. VEHICLE DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon blue">
+                        🚗
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            03
+                        </span>
+
+                        <h2>
+                            Vehicle Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-info-grid review-info-grid-3">
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Vehicle Make
+                        </span>
+
+                        <strong>
+                            {{ claim.vehicle_make|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Vehicle Model
+                        </span>
+
+                        <strong>
+                            {{ claim.vehicle_model|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Vehicle Variant
+                        </span>
+
+                        <strong>
+                            {{ claim.policy.vehicle_variant|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Vehicle Year
+                        </span>
+
+                        <strong>
+                            {{ claim.vehicle_year|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Registration Number
+                        </span>
+
+                        <strong>
+                            {{ claim.registration_number|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Fuel Type
+                        </span>
+
+                        <strong>
+                            {{ claim.policy.fuel_type|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 4. INCIDENT DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon orange">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            04
+                        </span>
+
+                        <h2>
+                            Incident Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-info-grid review-info-grid-3">
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Incident Date
+                        </span>
+
+                        <strong>
+
+                            {% if claim.incident_date %}
+                                {{ claim.incident_date|date:"d M Y" }}
+                            {% else %}
+                                Not Available
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Incident Time
+                        </span>
+
+                        <strong>
+
+                            {% if claim.incident_time %}
+                                {{ claim.incident_time }}
+                            {% else %}
+                                Not Available
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Incident Type
+                        </span>
+
+                        <strong>
+                            {{ claim.accident_type|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item review-info-full">
+
+                        <span class="review-label">
+                            Incident Location
+                        </span>
+
+                        <strong>
+                            {{ claim.accident_location|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-description-box">
+
+                    <span class="review-label">
+                        What Happened
+                    </span>
+
+                    <p>
+                        {{ claim.description|default:"No description provided." }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 5. DRIVER DETAILS -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon green">
+                        ◉
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            05
+                        </span>
+
+                        <h2>
+                            Driver Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-info-grid review-info-grid-4">
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Driver Name
+                        </span>
+
+                        <strong>
+                            {{ claim.driver_name|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Driving License Number
+                        </span>
+
+                        <strong>
+                            {{ claim.driving_license_number|default:"Not Available" }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Driver Age
+                        </span>
+
+                        <strong>
+
+                            {% if claim.driver_age %}
+                                {{ claim.driver_age }}
+                            {% else %}
+                                Not Available
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Authorised Under Policy
+                        </span>
+
+                        <div>
+
+                            {% if claim.driver_authorised == True %}
+
+                                <span class="status approved">
+                                    Yes
+                                </span>
+
+                            {% elif claim.driver_authorised == False %}
+
+                                <span class="status rejected">
+                                    No
+                                </span>
+
+                            {% else %}
+
+                                <span class="status pending">
+                                    Not Provided
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 6. THIRD PARTY -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon orange">
+                        ⇄
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            06
+                        </span>
+
+                        <h2>
+                            Third-Party Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-check-grid">
+
+
+                    <div class="review-check-item">
+
+                        <span>
+                            Another Vehicle / Third Party Involved
+                        </span>
+
+                        {% if claim.third_party_involved %}
+
+                            <span class="status approved">
+                                Yes
+                            </span>
+
+                        {% else %}
+
+                            <span class="status pending">
+                                No
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="review-check-item">
+
+                        <span>
+                            Anyone Injured
+                        </span>
+
+                        {% if claim.third_party_injury %}
+
+                            <span class="status rejected">
+                                Yes
+                            </span>
+
+                        {% else %}
+
+                            <span class="status pending">
+                                No
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="review-check-item">
+
+                        <span>
+                            Third-Party Property / Vehicle Damaged
+                        </span>
+
+                        {% if claim.third_party_damage %}
+
+                            <span class="status approved">
+                                Yes
+                            </span>
+
+                        {% else %}
+
+                            <span class="status pending">
+                                No
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 7. POLICE / FIR -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon red">
+                        ⚑
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            07
+                        </span>
+
+                        <h2>
+                            Police / FIR Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-info-grid review-info-grid-3">
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Police Report / FIR Status
+                        </span>
+
+                        <div>
+
+                            {% if claim.police_report_status == 'reported' %}
+
+                                <span class="status approved">
+                                    Reported
+                                </span>
+
+                            {% elif claim.police_report_status == 'not_reported' %}
+
+                                <span class="status rejected">
+                                    Not Reported
+                                </span>
+
+                            {% elif claim.police_report_status == 'not_required' %}
+
+                                <span class="status pending">
+                                    Not Required
+                                </span>
+
+                            {% else %}
+
+                                <span class="status pending">
+                                    Not Provided
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    {% if claim.police_report_number %}
+
+                        <div class="review-info-item">
+
+                            <span class="review-label">
+                                FIR / Police Report Number
+                            </span>
+
+                            <strong>
+                                {{ claim.police_report_number }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if claim.police_station %}
+
+                        <div class="review-info-item">
+
+                            <span class="review-label">
+                                Police Station
+                            </span>
+
+                            <strong>
+                                {{ claim.police_station }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if claim.police_report_date %}
+
+                        <div class="review-info-item">
+
+                            <span class="review-label">
+                                Report Date
+                            </span>
+
+                            <strong>
+                                {{ claim.police_report_date|date:"d M Y" }}
+                            </strong>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                {% if claim.police_not_reported_reason %}
+
+                    <div class="review-description-box">
+
+                        <span class="review-label">
+                            Reason for Not Reporting
+                        </span>
+
+                        <p>
+                            {{ claim.police_not_reported_reason }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 8. DAMAGE & CLAIM -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon red">
+                        ▰
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            08
+                        </span>
+
+                        <h2>
+                            Damage & Claim Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-info-grid review-info-grid-3">
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Estimated Damage
+                        </span>
+
+                        <strong class="money-value">
+
+                            {% if claim.estimated_damage != None %}
+                                ₹{{ claim.estimated_damage }}
+                            {% else %}
+                                Not Available
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Claim Amount
+                        </span>
+
+                        <strong class="money-value">
+
+                            {% if claim.claim_amount != None %}
+                                ₹{{ claim.claim_amount }}
+                            {% else %}
+                                Not Available
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div class="review-info-item">
+
+                        <span class="review-label">
+                            Previous Claims
+                        </span>
+
+                        <strong>
+
+                            {% if claim.previous_claims != None %}
+                                {{ claim.previous_claims }}
+                            {% else %}
+                                Not Available
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="review-description-box">
+
+                    <span class="review-label">
+                        Damage Description
+                    </span>
+
+                    <p>
+                        {{ claim.damage_description|default:"No damage description provided." }}
+                    </p>
+
+                </div>
+
+
+                <div class="damaged-parts-review">
+
+                    <span class="review-label">
+                        Damaged Parts
+                    </span>
+
+
+                    {% if claim.damaged_parts %}
+
+                        <div class="damaged-parts-tags">
+
+                            <span class="damage-tag">
+                                {{ claim.damaged_parts }}
+                            </span>
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="muted-text">
+                            No damaged parts specified.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 9. AI RISK ASSESSMENT -->
+            <!-- ================================================== -->
+
+            <div class="ai-review-card">
+
+                <div class="ai-review-header">
+
+                    <div class="ai-review-icon">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            09
+                        </span>
+
+                        <h2>
+                            AI Risk Assessment
+                        </h2>
+
+                        <p>
+                            Machine-learning assessment to support
+                            officer review.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ai-risk-summary-grid">
+
+
+                    <div class="ai-risk-main">
+
+                        <span class="review-label">
+                            Predicted Risk
+                        </span>
+
+
+                        <div class="ai-risk-value">
+
+                            {% if claim.risk_level == 'low' %}
+
+                                <span class="status approved">
+                                    Low
+                                </span>
+
+                            {% elif claim.risk_level == 'medium' %}
+
+                                <span class="status pending">
+                                    Medium
+                                </span>
+
+                            {% elif claim.risk_level == 'high' %}
+
+                                <span class="status rejected">
+                                    High
+                                </span>
+
+                            {% else %}
+
+                                <span class="status pending">
+                                    Not Assessed
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="ai-metric-box">
+
+                        <span class="review-label">
+                            AI Confidence
+                        </span>
+
+                        <strong>
+
+                            {% if claim.ai_confidence != None %}
+                                {{ claim.ai_confidence }}%
+                            {% else %}
+                                Not Available
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Risk Probabilities -->
+
+                <div class="ai-probability-card">
+
+                    <h3>
+                        Risk Probability
+                    </h3>
+
+
+                    <div class="ai-probability-grid">
+
+
+                        <div class="ai-probability-item">
+
+                            <span class="probability-label">
+                                Low Risk
+                            </span>
+
+                            <strong>
+
+                                {% if claim.low_probability != None %}
+                                    {{ claim.low_probability }}%
+                                {% else %}
+                                    N/A
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="ai-probability-item">
+
+                            <span class="probability-label">
+                                Medium Risk
+                            </span>
+
+                            <strong>
+
+                                {% if claim.medium_probability != None %}
+                                    {{ claim.medium_probability }}%
+                                {% else %}
+                                    N/A
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div class="ai-probability-item">
+
+                            <span class="probability-label">
+                                High Risk
+                            </span>
+
+                            <strong>
+
+                                {% if claim.high_probability != None %}
+                                    {{ claim.high_probability }}%
+                                {% else %}
+                                    N/A
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Decision Support -->
+
+                <div class="ai-decision-support">
+
+                    <div class="ai-decision-support-icon">
+                        i
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            AI Decision Support
+                        </strong>
+
+                        <p>
+                            The risk assessment is generated by the
+                            ClaimIntel machine learning model and is
+                            intended to support claim review.
+                            The final decision remains with the
+                            claim officer.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Key Factors -->
+
+                <div class="ai-factors-section">
+
+                    <div class="ai-factors-heading">
+
+                        <div class="ai-factor-heading-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Key Factors Requiring Attention
+                            </h3>
+
+                            <p>
+                                Factors identified by the AI assessment
+                                that may require verification.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if ai_explanation %}
+
+                        <div class="ai-explanation-list">
+
+                            {% for factor in ai_explanation %}
+
+                                <div class="ai-explanation-card">
+
+                                    <div class="ai-factor-number">
+                                        {{ forloop.counter }}
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ factor.title }}
+                                        </strong>
+
+                                        <p>
+                                            {{ factor.message }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="ai-no-factors">
+
+                            <span>
+                                ✓
+                            </span>
+
+                            <p>
+                                No additional review factors were identified.
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 10. SUPPORTING DOCUMENTS -->
+            <!-- ================================================== -->
+
+            <div class="review-section-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon purple">
+                        ▧
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            10
+                        </span>
+
+                        <h2>
+                            Supporting Documents
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                {% if documents %}
+
+
+                    <div class="review-document-list">
+
+
+                        {% for document in documents %}
+
+
+                            <div class="review-document-card">
+
+
+                                <div class="review-document-header">
+
+                                    <div class="document-icon">
+                                        ▧
+                                    </div>
+
+                                    <div>
+
+                                        <h3>
+                                            {{ document.get_document_type_display }}
+                                        </h3>
+
+                                        <span>
+                                            Supporting document
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- AI Summary -->
+
+                                <div class="document-summary-box">
+
+                                    <div class="document-summary-title">
+                                        ✦ AI Document Summary
+                                    </div>
+
+                                    <p>
+                                        {{ document.ai_summary|default:"No summary available." }}
+                                    </p>
+
+                                </div>
+
+
+
+                                <!-- Original -->
+
+                                {% if document.file %}
+
+                                    <a
+                                        href="{{ document.file.url }}"
+                                        target="_blank"
+                                        class="submit-button"
+                                    >
+                                        View Original Document →
+                                    </a>
+
+                                {% else %}
+
+                                    <p class="muted-text">
+                                        File unavailable.
+                                    </p>
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <div class="document-empty-state">
+
+                        <div class="document-empty-icon">
+                            ▧
+                        </div>
+
+                        <p>
+                            No documents were uploaded for this claim.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- 11. OFFICER DECISION -->
+            <!-- ================================================== -->
+
+            <div class="review-decision-card">
+
+                <div class="review-section-heading">
+
+                    <div class="review-section-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span class="review-section-number">
+                            11
+                        </span>
+
+                        <h2>
+                            Officer Decision
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                {% if error %}
+
+                    <div class="info-box">
+
+                        <strong>
+                            Error
+                        </strong>
+
+                        <p>
+                            {{ error }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+
+                {% if claim.reviewed_by %}
+
+
+                    <div class="decision-completed-box">
+
+                        <div class="decision-completed-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Claim Already Reviewed
+                            </strong>
+
+                            <p>
+                                This claim has already received
+                                an officer decision.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="review-info-grid">
+
+                        <div class="review-info-item">
+
+                            <span class="review-label">
+                                Reviewed By
+                            </span>
+
+                            <strong>
+                                {{ claim.reviewed_by.email }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="review-info-item">
+
+                            <span class="review-label">
+                                Reviewed At
+                            </span>
+
+                            <strong>
+                                {{ claim.reviewed_at|date:"d M Y, h:i A" }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="review-info-item">
+
+                            <span class="review-label">
+                                Decision
+                            </span>
+
+
+                            <div>
+
+                                {% if claim.status == 'approved' %}
+
+                                    <span class="status approved">
+                                        Approved
+                                    </span>
+
+                                {% elif claim.status == 'rejected' %}
+
+                                    <span class="status rejected">
+                                        Rejected
+                                    </span>
+
+                                {% elif claim.status == 'investigation' %}
+
+                                    <span class="status investigation">
+                                        Investigation Required
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status pending">
+                                        {{ claim.status }}
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="review-description-box">
+
+                        <span class="review-label">
+                            Officer Remarks
+                        </span>
+
+                        <p>
+                            {{ claim.officer_remarks|default:"No remarks provided." }}
+                        </p>
+
+                    </div>
+
+
+
+                {% else %}
+
+
+                    <form
+                        method="POST"
+                        action="{% url 'officer_claim_decision' claim.claim_id %}"
+                        class="officer-decision-form"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <label for="decision">
+                            Decision
+                        </label>
+
+
+                        <select
+                            name="decision"
+                            id="decision"
+                            required
+                        >
+
+                            <option value="">
+                                Select decision
+                            </option>
+
+                            <option value="approved">
+                                Approve Claim
+                            </option>
+
+                            <option value="rejected">
+                                Reject Claim
+                            </option>
+
+                            <option value="investigation">
+                                Investigation Required
+                            </option>
+
+                        </select>
+
+
+                        <label for="officer_remarks">
+                            Officer Remarks
+                        </label>
+
+
+                        <textarea
+                            name="officer_remarks"
+                            id="officer_remarks"
+                            rows="5"
+                            placeholder="Enter your reason or remarks..."
+                            required
+                        ></textarea>
+
+
+                        <div class="form-submit">
+
+                            <button type="submit">
+                                Submit Decision
+                            </button>
+
+                        </div>
+
+                    </form>
+
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- BACK TO CLAIMS -->
+            <!-- ================================================== -->
+
+            <div class="review-back-link">
+
+                <a
+                    href="{% url 'officer_claims' %}"
+                    class="view-link"
+                >
+                    ← Back to Claims
+                </a>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+</body>
+
+</html>

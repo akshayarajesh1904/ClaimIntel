@@ -1,0 +1,565 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Insurance Plans</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Administrator: {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ========================================================= -->
+<!-- DASHBOARD LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/admin-dashboard/">
+            <span class="sidebar-icon">▣</span>
+            Dashboard
+        </a>
+
+        <a href="/admin-policyholders/">
+            <span class="sidebar-icon">♙</span>
+            Policyholders
+        </a>
+
+        <a href="/admin-officers/">
+            <span class="sidebar-icon">♙</span>
+            Insurance Officers
+        </a>
+
+        <a
+            href="/admin-insurance-plans/"
+            class="active"
+        >
+            <span class="sidebar-icon">▤</span>
+            Insurance Plans
+        </a>
+
+        <a href="/admin-claims/">
+            <span class="sidebar-icon">▧</span>
+            Claims
+        </a>
+
+        <a href="/admin-reports/">
+            <span class="sidebar-icon">◫</span>
+            Reports
+        </a>
+
+        <a href="/profile/">
+            <span class="sidebar-icon">⚙</span>
+            Profile
+        </a>
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+            <span class="sidebar-icon">↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main admin-insurance-plans-page">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <div class="admin-plans-header">
+
+            <div>
+
+                <div class="admin-plans-eyebrow">
+                    PLAN MANAGEMENT
+                </div>
+
+                <h1>
+                    Insurance Plans
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    Create and manage car insurance plans
+                    available to policyholders.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/admin-insurance-plans/add/"
+                class="admin-add-plan-button"
+            >
+                + Add New Plan
+            </a>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- PLAN STATISTICS -->
+        <!-- ================================================= -->
+
+        <div class="admin-plan-stat-grid">
+
+
+            <!-- TOTAL -->
+
+            <div class="admin-plan-stat-card">
+
+                <div class="admin-plan-stat-icon blue">
+                    ▤
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ total_plans }}
+                    </strong>
+
+                    <span>
+                        Total Plans
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ACTIVE -->
+
+            <div class="admin-plan-stat-card">
+
+                <div class="admin-plan-stat-icon green">
+                    ✓
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ active_plans }}
+                    </strong>
+
+                    <span>
+                        Active Plans
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- INACTIVE -->
+
+            <div class="admin-plan-stat-card">
+
+                <div class="admin-plan-stat-icon red">
+                    ●
+                </div>
+
+                <div>
+
+                    <strong>
+                        {{ inactive_plans }}
+                    </strong>
+
+                    <span>
+                        Inactive Plans
+                    </span>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- PLANS TABLE -->
+        <!-- ================================================= -->
+
+        <div class="admin-plans-section-card">
+
+
+            <!-- SECTION HEADER -->
+
+            <div class="admin-plans-section-heading">
+
+                <div class="admin-plans-section-icon">
+                    ▤
+                </div>
+
+                <div>
+
+                    <h2>
+                        All Insurance Plans
+                    </h2>
+
+                    <p>
+                        Manage the insurance packages offered
+                        by ClaimIntel.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            {% if plans %}
+
+                <div class="admin-plans-table-wrapper">
+
+                    <table class="admin-plans-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Plan
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    Premium
+                                </th>
+
+                                <th>
+                                    Insured Value
+                                </th>
+
+                                <th>
+                                    Duration
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Actions
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for plan in plans %}
+
+                            <tr>
+
+
+                                <!-- PLAN -->
+
+                                <td>
+
+                                    <div class="admin-plan-name-cell">
+
+                                        <div class="admin-plan-row-icon">
+                                            ▤
+                                        </div>
+
+                                        <div>
+
+                                            <strong>
+                                                {{ plan.name }}
+                                            </strong>
+
+                                            {% if plan.description %}
+
+                                                <small>
+                                                    {{ plan.description }}
+                                                </small>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- TYPE -->
+
+                                <td>
+
+                                    <span class="admin-plan-type">
+                                        {{ plan.plan_type }}
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- PREMIUM -->
+
+                                <td>
+
+                                    <strong class="admin-plan-money">
+                                        ₹{{ plan.premium }}
+                                    </strong>
+
+                                </td>
+
+
+
+                                <!-- INSURED VALUE -->
+
+                                <td>
+
+                                    {% if plan.insured_value %}
+
+                                        <strong class="admin-plan-money">
+                                            ₹{{ plan.insured_value }}
+                                        </strong>
+
+                                    {% else %}
+
+                                        <span class="admin-plan-muted">
+                                            Not specified
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- DURATION -->
+
+                                <td>
+
+                                    {{ plan.duration_years }}
+                                    year{{ plan.duration_years|pluralize }}
+
+                                </td>
+
+
+
+                                <!-- STATUS -->
+
+                                <td>
+
+                                    {% if plan.is_active %}
+
+                                        <span class="admin-plan-status active">
+                                            Active
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="admin-plan-status inactive">
+                                            Inactive
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+
+                                <!-- ACTIONS -->
+
+                                <td>
+
+                                    <div class="admin-plan-actions">
+
+                                        <a
+                                            href="/admin-insurance-plans/edit/{{ plan.id }}/"
+                                            class="admin-plan-action edit"
+                                        >
+                                            Edit
+                                        </a>
+
+
+                                        {% if plan.is_active %}
+
+                                            <a
+                                                href="/admin-insurance-plans/toggle/{{ plan.id }}/"
+                                                class="admin-plan-action deactivate"
+                                                onclick="
+                                                    return confirm(
+                                                        'Are you sure you want to deactivate this plan?'
+                                                    );
+                                                "
+                                            >
+                                                Deactivate
+                                            </a>
+
+                                        {% else %}
+
+                                            <a
+                                                href="/admin-insurance-plans/toggle/{{ plan.id }}/"
+                                                class="admin-plan-action activate"
+                                                onclick="
+                                                    return confirm(
+                                                        'Are you sure you want to activate this plan?'
+                                                    );
+                                                "
+                                            >
+                                                Activate
+                                            </a>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+
+                <!-- ================================================= -->
+                <!-- EMPTY STATE -->
+                <!-- ================================================= -->
+
+                <div class="admin-plan-empty-state">
+
+                    <div class="admin-plan-empty-icon">
+                        ▤
+                    </div>
+
+                    <h3>
+                        No Insurance Plans
+                    </h3>
+
+                    <p>
+                        You have not created any insurance plans yet.
+                        Create your first plan to make it available
+                        to policyholders.
+                    </p>
+
+                    <a
+                        href="/admin-insurance-plans/add/"
+                        class="admin-add-plan-empty-button"
+                    >
+                        + Add Insurance Plan
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- INFORMATION CARD -->
+        <!-- ================================================= -->
+
+        <div class="admin-plan-info-card">
+
+            <div class="admin-plan-info-icon">
+                ℹ
+            </div>
+
+            <div>
+
+                <h3>
+                    Insurance Plan Management
+                </h3>
+
+                <p>
+                    Administrators can create, update, activate,
+                    or deactivate insurance plans. Inactive plans
+                    remain in the system but are no longer offered
+                    as new options to policyholders.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

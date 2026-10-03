@@ -1,0 +1,540 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Officer Dashboard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Officer: {{ user.email }}
+            </span>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- LAYOUT -->
+    <!-- ================================================== -->
+
+    <div class="dashboard-container">
+
+
+        <!-- ================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ================================================== -->
+
+        <aside class="sidebar">
+
+            <a
+                href="/officer-dashboard/"
+                class="active"
+            >
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/officer-claims/">
+                <span class="sidebar-icon">▣</span>
+                <span>Claims</span>
+            </a>
+
+
+            <a href="/officer-pending/">
+                <span class="sidebar-icon">◷</span>
+                <span>Pending Review</span>
+            </a>
+
+
+            <a href="/officer-reports/">
+                <span class="sidebar-icon">▤</span>
+                <span>Reports</span>
+            </a>
+
+
+            <a href="/profile/">
+                <span class="sidebar-icon">◯</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="/logout/"
+                class="sidebar-logout"
+            >
+                <span class="sidebar-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+
+
+        <!-- ================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================== -->
+
+        <main class="dashboard-main officer-dashboard-page">
+
+
+            <!-- ================================================== -->
+            <!-- PAGE HEADER -->
+            <!-- ================================================== -->
+
+            <div class="officer-dashboard-header">
+
+                <div>
+
+                    <div class="officer-dashboard-eyebrow">
+                        OFFICER DASHBOARD
+                    </div>
+
+                    <h1>
+                        Officer Dashboard
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        Review and manage submitted insurance claims.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- STATISTICS -->
+            <!-- ================================================== -->
+
+            <div class="officer-stat-grid">
+
+
+                <!-- Total Claims -->
+
+                <div class="officer-stat-card">
+
+                    <div class="officer-stat-icon blue">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <span class="officer-stat-label">
+                            Total Claims
+                        </span>
+
+                        <strong class="officer-stat-value">
+                            {{ total_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Under Review -->
+
+                <div class="officer-stat-card">
+
+                    <div class="officer-stat-icon orange">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <span class="officer-stat-label">
+                            Under Review
+                        </span>
+
+                        <strong class="officer-stat-value">
+                            {{ pending_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Approved -->
+
+                <div class="officer-stat-card">
+
+                    <div class="officer-stat-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span class="officer-stat-label">
+                            Approved
+                        </span>
+
+                        <strong class="officer-stat-value">
+                            {{ approved_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Rejected -->
+
+                <div class="officer-stat-card">
+
+                    <div class="officer-stat-icon red">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span class="officer-stat-label">
+                            Rejected
+                        </span>
+
+                        <strong class="officer-stat-value">
+                            {{ rejected_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Investigation -->
+
+                <div class="officer-stat-card">
+
+                    <div class="officer-stat-icon purple">
+                        ⚑
+                    </div>
+
+                    <div>
+
+                        <span class="officer-stat-label">
+                            Investigation
+                        </span>
+
+                        <strong class="officer-stat-value">
+                            {{ investigation_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- SUBMITTED CLAIMS -->
+            <!-- ================================================== -->
+
+            <div class="claims-section officer-dashboard-claims-card">
+
+
+                <div class="officer-dashboard-section-header">
+
+                    <div class="officer-dashboard-section-icon">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Submitted Claims
+                        </h2>
+
+                        <p>
+                            Review submitted claims and their current status.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                {% if claims %}
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Claim ID
+                                </th>
+
+                                <th>
+                                    Policyholder
+                                </th>
+
+                                <th>
+                                    Vehicle
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    Amount
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            {% for claim in claims %}
+
+                            <tr>
+
+
+                                <!-- Claim ID -->
+
+                                <td>
+
+                                    <div class="officer-dashboard-claim-id">
+
+                                        <span>
+                                            #
+                                        </span>
+
+                                        <strong>
+                                            {{ claim.claim_id }}
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- Policyholder -->
+
+                                <td>
+
+                                    <div class="officer-dashboard-user">
+
+                                        
+
+                                        {{ claim.policyholder.email }}
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- Vehicle -->
+
+                                <td>
+
+                                    <div class="officer-dashboard-vehicle">
+
+                                        <span>
+                                            🚗
+                                        </span>
+
+                                        <span>
+                                            {{ claim.vehicle_make }}
+                                            {{ claim.vehicle_model }}
+                                        </span>
+
+                                    </div>
+
+                                </td>
+
+
+
+                                <!-- Date -->
+
+                                <td>
+
+                                    <span class="officer-dashboard-date">
+                                        {{ claim.incident_date|date:"d M Y" }}
+                                    </span>
+
+                                </td>
+
+
+
+                                <!-- Amount -->
+
+                                <td>
+
+                                    <strong class="officer-dashboard-amount">
+                                        ₹{{ claim.claim_amount }}
+                                    </strong>
+
+                                </td>
+
+
+
+                                <!-- Status -->
+
+                                <td>
+
+
+                                    {% if claim.status == 'under_review' %}
+
+                                        <span class="status pending">
+                                            Under Review
+                                        </span>
+
+
+                                    {% elif claim.status == 'approved' %}
+
+                                        <span class="status approved">
+                                            Approved
+                                        </span>
+
+
+                                    {% elif claim.status == 'rejected' %}
+
+                                        <span class="status rejected">
+                                            Rejected
+                                        </span>
+
+
+                                    {% elif claim.status == 'investigation' %}
+
+                                        <span class="status investigation">
+                                            Investigation Required
+                                        </span>
+
+
+                                    {% endif %}
+
+
+                                </td>
+
+
+
+                                <!-- Action -->
+
+                                <td>
+
+                                    <a
+                                        href="/officer-claim/{{ claim.claim_id }}/"
+                                        class="view-link officer-dashboard-review"
+                                    >
+                                        Review →
+                                    </a>
+
+                                </td>
+
+
+                            </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                {% else %}
+
+
+                    <div class="officer-dashboard-empty">
+
+                        <div class="officer-dashboard-empty-icon">
+                            ▣
+                        </div>
+
+                        <h3>
+                            No Claims Yet
+                        </h3>
+
+                        <p>
+                            No claims have been submitted yet.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+
+        </main>
+
+    </div>
+
+
+</body>
+
+</html>

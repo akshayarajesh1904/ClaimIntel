@@ -1,0 +1,710 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Reports</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Officer: {{ user.email }}
+            </span>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- LAYOUT -->
+    <!-- ================================================== -->
+
+    <div class="dashboard-container">
+
+
+        <!-- ================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ================================================== -->
+
+        <aside class="sidebar">
+
+            <a href="/officer-dashboard/">
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a href="/officer-claims/">
+                <span class="sidebar-icon">▣</span>
+                <span>Claims</span>
+            </a>
+
+
+            <a href="/officer-pending/">
+                <span class="sidebar-icon">◷</span>
+                <span>Pending Review</span>
+            </a>
+
+
+            <a
+                href="/officer-reports/"
+                class="active"
+            >
+                <span class="sidebar-icon">▤</span>
+                <span>Reports</span>
+            </a>
+
+
+            <a href="/profile/">
+                <span class="sidebar-icon">◯</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="/logout/"
+                class="sidebar-logout"
+            >
+                <span class="sidebar-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+
+
+        <!-- ================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================== -->
+
+        <main class="dashboard-main officer-reports-page">
+
+
+            <!-- ================================================== -->
+            <!-- PAGE HEADER -->
+            <!-- ================================================== -->
+
+            <div class="reports-page-header">
+
+                <div>
+
+                    <div class="reports-eyebrow">
+                        OFFICER REPORTS
+                    </div>
+
+                    <h1>
+                        Reports & Analytics
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        Monitor claim activity and risk patterns.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- KPI CARDS -->
+            <!-- ================================================== -->
+
+            <div class="report-kpi-grid">
+
+
+                <!-- Total Claims -->
+
+                <div class="report-kpi-card">
+
+                    <div class="report-kpi-icon blue">
+                        ▤
+                    </div>
+
+                    <div class="report-kpi-content">
+
+                        <span class="report-kpi-label">
+                            Total Claims
+                        </span>
+
+                        <strong class="report-kpi-value">
+                            {{ total_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Processed -->
+
+                <div class="report-kpi-card">
+
+                    <div class="report-kpi-icon green">
+                        ✓
+                    </div>
+
+                    <div class="report-kpi-content">
+
+                        <span class="report-kpi-label">
+                            Processed
+                        </span>
+
+                        <strong class="report-kpi-value">
+                            {{ processed_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Pending -->
+
+                <div class="report-kpi-card">
+
+                    <div class="report-kpi-icon orange">
+                        ◷
+                    </div>
+
+                    <div class="report-kpi-content">
+
+                        <span class="report-kpi-label">
+                            Pending
+                        </span>
+
+                        <strong class="report-kpi-value">
+                            {{ pending_claims }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- High Risk -->
+
+                <div class="report-kpi-card">
+
+                    <div class="report-kpi-icon red">
+                        !
+                    </div>
+
+                    <div class="report-kpi-content">
+
+                        <span class="report-kpi-label">
+                            High Risk
+                        </span>
+
+                        <strong class="report-kpi-value">
+                            {{ high_risk_percentage }}%
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- CHARTS -->
+            <!-- ================================================== -->
+
+            <div class="reports-chart-grid">
+
+
+                <!-- ================================================== -->
+                <!-- CLAIM STATUS CHART -->
+                <!-- ================================================== -->
+
+                <div class="reports-chart-card">
+
+                    <div class="reports-card-header">
+
+                        <div>
+
+                            <h2>
+                                Claim Status Overview
+                            </h2>
+
+                            <p>
+                                Distribution of submitted claims.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="reports-chart-body">
+
+
+                        <!-- Donut -->
+
+                        <div
+                            class="donut-chart status-donut"
+                            id="statusDonut"
+                        >
+
+                            <div class="donut-center">
+
+                                <strong>
+                                    {{ total_claims }}
+                                </strong>
+
+                                <span>
+                                    Total Claims
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Legend -->
+
+                        <div class="chart-legend">
+
+
+                            <div class="chart-legend-row">
+
+                                <span class="legend-label">
+
+                                    <span class="legend-dot approved-dot"></span>
+
+                                    Approved
+
+                                </span>
+
+                                <strong>
+                                    {{ approved_claims }}
+                                </strong>
+
+                                <span>
+                                    ({{ approved_percentage }}%)
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="chart-legend-row">
+
+                                <span class="legend-label">
+
+                                    <span class="legend-dot pending-dot"></span>
+
+                                    Under Review
+
+                                </span>
+
+                                <strong>
+                                    {{ pending_claims }}
+                                </strong>
+
+                                <span>
+                                    ({{ pending_percentage }}%)
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="chart-legend-row">
+
+                                <span class="legend-label">
+
+                                    <span class="legend-dot rejected-dot"></span>
+
+                                    Rejected
+
+                                </span>
+
+                                <strong>
+                                    {{ rejected_claims }}
+                                </strong>
+
+                                <span>
+                                    ({{ rejected_percentage }}%)
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ================================================== -->
+                <!-- AI RISK CHART -->
+                <!-- ================================================== -->
+
+                <div class="reports-chart-card">
+
+                    <div class="reports-card-header">
+
+                        <div>
+
+                            <h2>
+                                AI Risk Assessment
+                            </h2>
+
+                            <p>
+                                Distribution of predicted claim risk.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="reports-chart-body">
+
+
+                        <!-- Donut -->
+
+                        <div
+                            class="donut-chart risk-donut"
+                            id="riskDonut"
+                        >
+
+                            <div class="donut-center">
+
+                                <strong>
+                                    {{ total_claims }}
+                                </strong>
+
+                                <span>
+                                    Total Claims
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Legend -->
+
+                        <div class="chart-legend">
+
+
+                            <div class="chart-legend-row">
+
+                                <span class="legend-label">
+
+                                    <span class="legend-dot low-dot"></span>
+
+                                    Low Risk
+
+                                </span>
+
+                                <strong>
+                                    {{ low_risk }}
+                                </strong>
+
+                                <span id="lowRiskPercentage">
+                                    (0%)
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="chart-legend-row">
+
+                                <span class="legend-label">
+
+                                    <span class="legend-dot medium-dot"></span>
+
+                                    Medium Risk
+
+                                </span>
+
+                                <strong>
+                                    {{ medium_risk }}
+                                </strong>
+
+                                <span id="mediumRiskPercentage">
+                                    (0%)
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="chart-legend-row">
+
+                                <span class="legend-label">
+
+                                    <span class="legend-dot high-dot"></span>
+
+                                    High Risk
+
+                                </span>
+
+                                <strong>
+                                    {{ high_risk }}
+                                </strong>
+
+                                <span>
+                                    ({{ high_risk_percentage }}%)
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- INVESTIGATION SUMMARY -->
+            <!-- ================================================== -->
+
+            <div class="investigation-report-card">
+
+
+                <div class="investigation-icon">
+                    ⛨
+                </div>
+
+
+                <div class="investigation-content">
+
+                    <h2>
+                        Investigation Summary
+                    </h2>
+
+                    <div class="investigation-count">
+
+                        {{ investigation_claims }}
+
+                        <span>
+                            Claims Require Investigation
+                        </span>
+
+                    </div>
+
+                    <p>
+                        Claims requiring additional investigation
+                        before final resolution.
+                    </p>
+
+                </div>
+
+
+                <div class="investigation-visual">
+
+                    <div class="investigation-document-icon">
+                        ▤
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- ABOUT AI -->
+            <!-- ================================================== -->
+
+            <div class="report-ai-info">
+
+
+                <div class="report-ai-info-icon">
+                    i
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        About AI Analytics
+                    </h2>
+
+                    <p>
+                        ClaimIntel uses machine learning to assess
+                        claim risk based on available claim information.
+                        AI results are intended to assist officers and
+                        do not replace human decision-making.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+
+    <!-- ================================================== -->
+    <!-- CHART DATA -->
+    <!-- ================================================== -->
+
+    <script>
+
+        const totalClaims =
+            Number("{{ total_claims }}") || 0;
+
+
+        const lowRisk =
+            Number("{{ low_risk }}") || 0;
+
+
+        const mediumRisk =
+            Number("{{ medium_risk }}") || 0;
+
+
+        const highRisk =
+            Number("{{ high_risk }}") || 0;
+
+
+
+        /* ================================================== */
+        /* STATUS DONUT */
+        /* ================================================== */
+
+        const approvedPercentage =
+            Number("{{ approved_percentage }}") || 0;
+
+        const pendingPercentage =
+            Number("{{ pending_percentage }}") || 0;
+
+        const rejectedPercentage =
+            Number("{{ rejected_percentage }}") || 0;
+
+
+        const statusDonut =
+            document.getElementById("statusDonut");
+
+
+        if (statusDonut) {
+
+            statusDonut.style.background =
+                `conic-gradient(
+                    #22c55e 0% ${approvedPercentage}%,
+                    #f59e0b ${approvedPercentage}% ${approvedPercentage + pendingPercentage}%,
+                    #ef4444 ${approvedPercentage + pendingPercentage}% 100%
+                )`;
+
+        }
+
+
+
+        /* ================================================== */
+        /* RISK DONUT */
+        /* ================================================== */
+
+        if (totalClaims > 0) {
+
+            const lowPercentage =
+                Math.round(
+                    (lowRisk / totalClaims) * 100
+                );
+
+            const mediumPercentage =
+                Math.round(
+                    (mediumRisk / totalClaims) * 100
+                );
+
+            const highPercentage =
+                Math.round(
+                    (highRisk / totalClaims) * 100
+                );
+
+
+            const riskDonut =
+                document.getElementById("riskDonut");
+
+
+            if (riskDonut) {
+
+                riskDonut.style.background =
+                    `conic-gradient(
+                        #22c55e 0% ${lowPercentage}%,
+                        #f59e0b ${lowPercentage}% ${lowPercentage + mediumPercentage}%,
+                        #ef4444 ${lowPercentage + mediumPercentage}% 100%
+                    )`;
+
+            }
+
+
+            document.getElementById(
+                "lowRiskPercentage"
+            ).textContent =
+                `(${lowPercentage}%)`;
+
+
+            document.getElementById(
+                "mediumRiskPercentage"
+            ).textContent =
+                `(${mediumPercentage}%)`;
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>

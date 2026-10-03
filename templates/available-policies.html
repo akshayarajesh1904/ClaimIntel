@@ -1,0 +1,586 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Available Policies
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Welcome, {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================================= -->
+<!-- LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/dashboard/">
+
+            <span class="sidebar-icon">
+                ⌂
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <a href="/my-claims/">
+
+            <span class="sidebar-icon">
+                ▣
+            </span>
+
+            <span>
+                My Claims
+            </span>
+
+        </a>
+
+
+        {% if not has_policy %}
+        <a
+            href="/available-policies/"
+            class="active"
+        >
+
+            <span class="sidebar-icon">
+                ▤
+            </span>
+
+            <span>
+                Insurance Policies
+            </span>
+
+        </a>
+        {% endif %}
+
+
+        <a href="/submit-claim/">
+
+            <span class="sidebar-icon">
+                +
+            </span>
+
+            <span>
+                Submit Claim
+            </span>
+
+        </a>
+
+
+        <a href="/profile/">
+
+            <span class="sidebar-icon">
+                ◯
+            </span>
+
+            <span>
+                Profile
+            </span>
+
+        </a>
+
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+
+            <span class="sidebar-icon">
+                ↪
+            </span>
+
+            <span>
+                Logout
+            </span>
+
+        </a>
+
+    </aside>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main available-policies-page">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <div class="available-policies-header">
+
+            <div>
+
+                <div class="available-policies-eyebrow">
+                    INSURANCE POLICIES
+                </div>
+
+                <h1>
+                    Available Insurance Policies
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    Choose an insurance plan that suits your
+                    vehicle and coverage needs.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- SUMMARY -->
+        <!-- ================================================= -->
+
+        <div class="available-policies-summary-grid">
+
+
+            <div class="available-policies-summary-card">
+
+                <div class="available-policies-summary-icon blue">
+                    ▤
+                </div>
+
+                <div>
+
+                    <span>
+                        Available Plans
+                    </span>
+
+                    <strong>
+                        {{ plans|length }}
+                    </strong>
+
+                    <small>
+                        Insurance plans currently offered
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="available-policies-summary-card">
+
+                <div class="available-policies-summary-icon green">
+                    ✓
+                </div>
+
+                <div>
+
+                    <span>
+                        Easy Registration
+                    </span>
+
+                    <strong class="available-policies-action-title">
+                        Choose & Register
+                    </strong>
+
+                    <small>
+                        Select a plan to start your policy
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- INSURANCE PLANS -->
+        <!-- ================================================= -->
+
+        <div class="available-policies-section-card">
+
+
+            <!-- SECTION HEADING -->
+
+            <div class="available-policies-section-heading">
+
+                <div class="available-policies-section-icon">
+                    ▤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Insurance Plans
+                    </h2>
+
+                    <p>
+                        Compare the available plans and choose
+                        the coverage that suits your vehicle.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- TABLE -->
+            <!-- ================================================= -->
+
+            <div class="available-policies-table-wrapper">
+
+                <table class="available-policies-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Plan
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Insured Value
+                            </th>
+
+                            <th>
+                                Premium
+                            </th>
+
+                            <th>
+                                Duration
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for plan in plans %}
+
+                        <tr>
+
+
+                            <!-- PLAN -->
+
+                            <td>
+
+                                <div class="available-plan-cell">
+
+                                    <div class="available-plan-icon">
+                                        ▤
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ plan.name }}
+                                        </strong>
+
+                                        <small>
+                                            Insurance Plan
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- TYPE -->
+
+                            <td>
+
+                                <span class="available-plan-type">
+                                    {{ plan.plan_type }}
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- DESCRIPTION -->
+
+                            <td>
+
+                                <div class="available-plan-description">
+
+                                    {{ plan.description|truncatechars:90|default:"Standard insurance coverage." }}
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- INSURED VALUE -->
+
+                            <td>
+
+                                {% if plan.insured_value %}
+
+                                    <strong class="available-plan-money">
+                                        ₹{{ plan.insured_value }}
+                                    </strong>
+
+                                {% else %}
+
+                                    <span class="available-plan-muted">
+                                        Not specified
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <!-- PREMIUM -->
+
+                            <td>
+
+                                <div class="available-plan-premium">
+
+                                    <strong>
+                                        ₹{{ plan.premium }}
+                                    </strong>
+
+                                    <small>
+                                        / year
+                                    </small>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- DURATION -->
+
+                            <td>
+
+                                <span class="available-plan-duration">
+
+                                    {{ plan.duration_years }}
+                                    year{{ plan.duration_years|pluralize }}
+
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- ACTION -->
+
+                            <!-- ACTION -->
+
+<td>
+
+    {% if has_policy %}
+
+        <span class="available-plan-action disabled">
+            Already Registered
+        </span>
+
+    {% else %}
+
+        <a
+            href="/register-policy/{{ plan.id }}/"
+            class="available-plan-action"
+        >
+            Take Policy →
+        </a>
+
+    {% endif %}
+
+</td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+
+                        <!-- EMPTY STATE -->
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="available-policies-empty-cell"
+                            >
+
+                                <div class="available-policies-empty-state">
+
+                                    <div class="available-policies-empty-icon">
+                                        ▤
+                                    </div>
+
+                                    <h3>
+                                        No Insurance Plans Available
+                                    </h3>
+
+                                    <p>
+                                        No insurance plans are currently
+                                        available for registration.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- INFORMATION -->
+        <!-- ================================================= -->
+
+        <div class="available-policies-info-card">
+
+            <div class="available-policies-info-icon">
+                ℹ
+            </div>
+
+            <div>
+
+                <h3>
+    Policy Registration Information
+</h3>
+
+{% if has_policy %}
+
+    <p>
+        You already have a registered insurance policy
+        linked to your account.
+    </p>
+
+    <p>
+        Only one insurance policy can be registered
+        to a policyholder account.
+    </p>
+
+    <p>
+        You can view your existing policy and claims
+        from the My Claims section.
+    </p>
+
+{% else %}
+
+    <p>
+        Select the insurance plan that best matches
+        your vehicle and coverage requirements.
+    </p>
+
+    <p>
+        After registration, your policy will appear
+        automatically under your Registered Policies
+        section.
+    </p>
+
+{% endif %}
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,371 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Edit Officer</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Administrator: {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- ========================================================= -->
+<!-- DASHBOARD LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/admin-dashboard/">
+            <span class="sidebar-icon">▣</span>
+            Dashboard
+        </a>
+
+        <a href="/admin-policyholders/">
+            <span class="sidebar-icon">♙</span>
+            Policyholders
+        </a>
+
+        <a
+            href="/admin-officers/"
+            class="active"
+        >
+            <span class="sidebar-icon">♙</span>
+            Insurance Officers
+        </a>
+
+        <a href="/admin-insurance-plans/">
+            <span class="sidebar-icon">▤</span>
+            Insurance Plans
+        </a>
+
+        <a href="/admin-claims/">
+            <span class="sidebar-icon">▧</span>
+            Claims
+        </a>
+
+        <a href="/admin-reports/">
+            <span class="sidebar-icon">◫</span>
+            Reports
+        </a>
+
+        <a href="/profile/">
+            <span class="sidebar-icon">⚙</span>
+            Profile
+        </a>
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+            <span class="sidebar-icon">↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main admin-edit-officer-page">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <div class="admin-edit-officer-header">
+
+            <div>
+
+                <div class="admin-edit-officer-eyebrow">
+                    OFFICER MANAGEMENT
+                </div>
+
+                <h1>
+                    Edit Claim Officer
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    Update the account information for this
+                    ClaimIntel officer.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/admin-officers/"
+                class="admin-edit-back-button"
+            >
+                ← Back to Officers
+            </a>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- EDIT FORM -->
+        <!-- ================================================= -->
+
+        <div class="admin-edit-officer-card">
+
+            <!-- SECTION HEADER -->
+
+            <div class="admin-edit-section-heading">
+
+                <div class="admin-edit-section-icon blue">
+                    ♙
+                </div>
+
+                <div>
+
+                    <h2>
+                        Officer Account
+                    </h2>
+
+                    <p>
+                        Update the officer's personal and
+                        account information below.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- FORM -->
+
+            <form
+                method="POST"
+                class="admin-officer-form"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- FIRST NAME -->
+
+                <div class="admin-form-field">
+
+                    <label for="first_name">
+                        First Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="first_name"
+                        name="first_name"
+                        value="{{ officer.first_name }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- LAST NAME -->
+
+                <div class="admin-form-field">
+
+                    <label for="last_name">
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="last_name"
+                        name="last_name"
+                        value="{{ officer.last_name }}"
+                    >
+
+                </div>
+
+
+
+                <!-- EMAIL -->
+
+                <div class="admin-form-field">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value="{{ officer.email }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- ROLE -->
+
+                <div class="admin-form-field">
+
+                    <label for="role">
+                        Role
+                    </label>
+
+                    <input
+                        type="text"
+                        id="role"
+                        value="Claim Officer"
+                        disabled
+                        class="admin-disabled-field"
+                    >
+
+                    <small>
+                        The officer's role cannot be changed from
+                        this page.
+                    </small>
+
+                </div>
+
+
+
+                <!-- ACCOUNT STATUS -->
+
+                <div class="admin-form-field admin-status-field">
+
+                    <label>
+                        Account Status
+                    </label>
+
+                    <div>
+
+                        {% if officer.is_active %}
+
+                            <span class="admin-edit-status active">
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span class="admin-edit-status inactive">
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BUTTONS -->
+
+                <div class="admin-edit-form-actions">
+
+                    <button
+                        type="submit"
+                        class="admin-save-officer-button"
+                    >
+                        Save Changes
+                    </button>
+
+                    <a
+                        href="/admin-officers/"
+                        class="admin-cancel-officer-button"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- INFORMATION -->
+        <!-- ================================================= -->
+
+        <div class="admin-officer-info-card">
+
+            <div class="admin-info-icon">
+                ℹ
+            </div>
+
+            <div>
+
+                <h3>
+                    Officer Management
+                </h3>
+
+                <p>
+                    Administrators can update officer account
+                    information from this page. The officer's
+                    role remains Claim Officer.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

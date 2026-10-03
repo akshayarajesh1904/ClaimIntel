@@ -1,0 +1,615 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <div class="brand-area">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+    </div>
+
+
+    <div class="header-user">
+
+        <span>
+            Welcome, {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================================= -->
+<!-- DASHBOARD LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+
+        <a
+            href="/dashboard/"
+            class="active"
+        >
+            <span class="sidebar-icon">⌂</span>
+            <span>Dashboard</span>
+        </a>
+
+
+        <a href="/my-claims/">
+            <span class="sidebar-icon">▣</span>
+            <span>My Claims</span>
+        </a>
+
+        {% if not has_policy %}
+        <a href="/available-policies/">
+            <span class="sidebar-icon">▤</span>
+            <span>Register New Policy</span>
+        </a>
+        {% endif %}
+
+
+        <a href="/submit-claim/">
+            <span class="sidebar-icon">+</span>
+            <span>Submit Claim</span>
+        </a>
+
+
+        <a href="/profile/">
+            <span class="sidebar-icon">◯</span>
+            <span>Profile</span>
+        </a>
+
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+            <span class="sidebar-icon">↪</span>
+            <span>Logout</span>
+        </a>
+
+    </aside>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <section class="dashboard-page-header">
+
+            <div>
+
+                <span class="page-label">
+                    POLICYHOLDER PORTAL
+                </span>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Manage and track your insurance claims
+                    from one place.
+                </p>
+
+            </div>
+
+
+            <a
+                href="/submit-claim/"
+                class="dashboard-header-button"
+            >
+                <span>+</span>
+                Submit Claim
+            </a>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- CLAIM OVERVIEW -->
+        <!-- ================================================= -->
+
+        <section class="claim-overview-grid">
+
+
+            <!-- TOTAL CLAIMS -->
+
+            <div class="claim-overview-card">
+
+                <div class="claim-overview-top">
+
+                    <div class="overview-icon overview-blue">
+                        ▣
+                    </div>
+
+                    <span>
+                        Total Claims
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    {{ total_claims }}
+                </strong>
+
+
+            </div>
+
+
+
+            <!-- PENDING -->
+
+            <div class="claim-overview-card">
+
+                <div class="claim-overview-top">
+
+                    <div class="overview-icon overview-yellow">
+                        ◷
+                    </div>
+
+                    <span>
+                        Pending Claims
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    {{ pending_claims }}
+                </strong>
+
+
+
+            </div>
+
+
+
+            <!-- APPROVED -->
+
+            <div class="claim-overview-card">
+
+                <div class="claim-overview-top">
+
+                    <div class="overview-icon overview-green">
+                        ✓
+                    </div>
+
+                    <span>
+                        Approved Claims
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    {{ approved_claims }}
+                </strong>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- PRIMARY CLAIM ACTION -->
+        <!-- ================================================= -->
+
+        <section class="dashboard-action-card">
+
+            <div class="dashboard-action-content">
+
+
+                <div class="dashboard-action-icon">
+                    +
+                </div>
+
+
+                <div>
+
+                    <span>
+                        NEED TO MAKE A CLAIM?
+                    </span>
+
+                    <h2>
+                        Submit your car insurance claim online.
+                    </h2>
+
+                    <p>
+                        Provide the incident details and upload
+                        your supporting documents for review.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <a
+                href="/submit-claim/"
+                class="dashboard-action-button"
+            >
+                Submit Claim
+            </a>
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- RECENT CLAIMS -->
+        <!-- ================================================= -->
+
+        <section class="recent-claims-card">
+
+
+            <div class="recent-claims-header">
+
+                <div>
+
+                    <span class="section-label">
+                        CLAIM ACTIVITY
+                    </span>
+
+                    <h2>
+                        Recent Claims
+                    </h2>
+
+                    <p>
+                        Your latest insurance claim activity.
+                    </p>
+
+                </div>
+
+
+                {% if recent_claims %}
+
+                    <a
+                        href="/my-claims/"
+                        class="view-all-link"
+                    >
+                        View all claims →
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+
+            {% if recent_claims %}
+
+
+                <div class="claim-activity-list">
+
+
+                    {% for claim in recent_claims %}
+
+
+                    <div class="claim-activity-row">
+
+
+                        <!-- CLAIM -->
+
+                        <div class="claim-activity-main">
+
+
+                            <div class="claim-activity-id">
+
+                                <strong>
+                                    {{ claim.claim_id }}
+                                </strong>
+
+                                <span>
+                                    {{ claim.incident_date|date:"d M Y" }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="claim-activity-vehicle">
+
+                                {{ claim.vehicle_make }}
+                                {{ claim.vehicle_model }}
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- STATUS -->
+
+                        <div class="claim-activity-status">
+
+                            {% if claim.status == 'under_review' %}
+
+                                <span class="status pending">
+                                    Under Review
+                                </span>
+
+
+                            {% elif claim.status == 'approved' %}
+
+                                <span class="status approved">
+                                    Approved
+                                </span>
+
+
+                            {% elif claim.status == 'rejected' %}
+
+                                <span class="status rejected">
+                                    Rejected
+                                </span>
+
+
+                            {% elif claim.status == 'investigation' %}
+
+                                <span class="status investigation">
+                                    Investigation Required
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="status">
+                                    {{ claim.get_status_display }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+
+                        <!-- ACTION -->
+
+                        <div class="claim-activity-action">
+
+                            <a
+                                href="/claim-details/{{ claim.claim_id }}/"
+                            >
+                                View
+                            </a>
+
+                        </div>
+
+
+                    </div>
+
+
+                    {% endfor %}
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- ================================================= -->
+                <!-- EMPTY STATE -->
+                <!-- ================================================= -->
+
+                <div class="dashboard-empty-state">
+
+
+                    <div class="empty-state-icon">
+                        ▣
+                    </div>
+
+
+                    <h3>
+                        No claims yet
+                    </h3>
+
+
+                    <p>
+                        You have not submitted any insurance claims.
+                    </p>
+
+
+                    <a
+                        href="/submit-claim/"
+                        class="submit-button"
+                    >
+                        Submit Your First Claim
+                    </a>
+
+
+                </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+
+        <!-- ================================================= -->
+        <!-- QUICK ACCESS -->
+        <!-- ================================================= -->
+
+        <section class="quick-access-section">
+
+
+            <div class="quick-access-header">
+
+                <div>
+
+                    <span class="section-label">
+                        QUICK ACCESS
+                    </span>
+
+                    <h2>
+                        Manage your account
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick-access-grid">
+
+
+                <a
+                    href="/my-claims/"
+                    class="quick-access-card"
+                >
+
+                    <div class="quick-access-icon">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            My Claims
+                        </strong>
+
+                        <span>
+                            Track your submitted claims
+                        </span>
+
+                    </div>
+
+                    <b>
+                        →
+                    </b>
+
+                </a>
+
+
+                {% if not has_policy %}
+                <a
+                    href="/available-policies/"
+                    class="quick-access-card"
+                >
+
+                    <div class="quick-access-icon">
+                        ▤
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Register New Policy
+                        </strong>
+
+                        <span>
+                            Browse available insurance plans
+                        </span>
+
+                    </div>
+
+                    <b>
+                        →
+                    </b>
+
+                </a>
+                {% endif %}
+
+
+
+                <a
+                    href="/profile/"
+                    class="quick-access-card"
+                >
+
+                    <div class="quick-access-icon">
+                        ◯
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            My Profile
+                        </strong>
+
+                        <span>
+                            View your account information
+                        </span>
+
+                    </div>
+
+                    <b>
+                        →
+                    </b>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

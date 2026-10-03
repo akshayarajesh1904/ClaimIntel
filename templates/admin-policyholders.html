@@ -1,0 +1,547 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - Policyholders
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- ================================================== -->
+    <!-- HEADER -->
+    <!-- ================================================== -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Administrator: {{ user.email }}
+            </span>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================================================== -->
+    <!-- LAYOUT -->
+    <!-- ================================================== -->
+
+    <div class="dashboard-container">
+
+
+        <!-- ================================================== -->
+        <!-- SIDEBAR -->
+        <!-- ================================================== -->
+
+        <aside class="sidebar">
+
+            <a href="/admin-dashboard/">
+                <span class="sidebar-icon">⌂</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="/admin-policyholders/"
+                class="active"
+            >
+                <span class="sidebar-icon">◯</span>
+                <span>Policyholders</span>
+            </a>
+
+
+            <a href="/admin-officers/">
+                <span class="sidebar-icon">▣</span>
+                <span>Insurance Officers</span>
+            </a>
+
+
+            <a href="/admin-insurance-plans/">
+                <span class="sidebar-icon">▤</span>
+                <span>Insurance Plans</span>
+            </a>
+
+
+            <a href="/admin-claims/">
+                <span class="sidebar-icon">▦</span>
+                <span>Claims</span>
+            </a>
+
+
+            <a href="/admin-reports/">
+                <span class="sidebar-icon">▥</span>
+                <span>Reports</span>
+            </a>
+
+
+            <a href="/profile/">
+                <span class="sidebar-icon">◉</span>
+                <span>Profile</span>
+            </a>
+
+
+            <a
+                href="/logout/"
+                class="sidebar-logout"
+            >
+                <span class="sidebar-icon">↪</span>
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+
+
+        <!-- ================================================== -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================== -->
+
+        <main class="dashboard-main admin-policyholders-page">
+
+
+            <!-- ================================================== -->
+            <!-- PAGE HEADER -->
+            <!-- ================================================== -->
+
+            <div class="admin-policyholders-header">
+
+                <div>
+
+                    <div class="admin-policyholders-eyebrow">
+                        POLICYHOLDERS
+                    </div>
+
+                    <h1>
+                        Policyholders
+                    </h1>
+
+                    <p class="dashboard-subtitle">
+                        View and monitor registered customers,
+                        their policies, claims, and account status.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- STATISTICS -->
+            <!-- ================================================== -->
+
+            <div class="admin-policyholder-stat-grid">
+
+
+                <!-- Total -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon blue">
+                        ◯
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Total Policyholders
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ total_policyholders }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Active -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Active Customers
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ active_policyholders }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Inactive -->
+
+                <div class="admin-stat-card">
+
+                    <div class="admin-stat-icon red">
+                        !
+                    </div>
+
+                    <div>
+
+                        <span class="admin-stat-label">
+                            Inactive Customers
+                        </span>
+
+                        <strong class="admin-stat-value">
+                            {{ inactive_policyholders }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ================================================== -->
+            <!-- POLICYHOLDER TABLE -->
+            <!-- ================================================== -->
+
+            <div class="admin-content-card">
+
+
+                <div class="admin-content-header">
+
+                    <div>
+
+                        <div class="admin-section-icon blue">
+                            ◯
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <h2>
+                            Registered Policyholders
+                        </h2>
+
+                        <p>
+                            Customer accounts and insurance activity.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                {% if policyholders %}
+
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Customer
+                                    </th>
+
+                                    <th>
+                                        Email
+                                    </th>
+
+                                    <th>
+                                        Account Status
+                                    </th>
+
+                                    <th>
+                                        Date Joined
+                                    </th>
+
+                                    <th>
+                                        Policies
+                                    </th>
+
+                                    <th>
+                                        Claims
+                                    </th>
+
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                {% for policyholder in policyholders %}
+
+
+                                    <tr>
+
+
+                                        <!-- ================================= -->
+                                        <!-- CUSTOMER -->
+                                        <!-- ================================= -->
+
+                                        <td>
+
+                                            <div class="admin-policyholder-customer">
+
+                                                <span class="admin-policyholder-avatar">
+                                                    ◯
+                                                </span>
+
+                                                <strong>
+
+                                                    {% if policyholder.get_full_name %}
+
+                                                        {{ policyholder.get_full_name }}
+
+                                                    {% else %}
+
+                                                        Policyholder
+
+                                                    {% endif %}
+
+                                                </strong>
+
+                                            </div>
+
+                                        </td>
+
+
+
+                                        <!-- ================================= -->
+                                        <!-- EMAIL -->
+                                        <!-- ================================= -->
+
+                                        <td>
+
+                                            <span class="admin-policyholder-email">
+                                                {{ policyholder.email }}
+                                            </span>
+
+                                        </td>
+
+
+
+                                        <!-- ================================= -->
+                                        <!-- ACCOUNT STATUS -->
+                                        <!-- ================================= -->
+
+                                        <td>
+
+
+                                            {% if policyholder.is_active %}
+
+                                                <span class="admin-account-status active">
+                                                    Active
+                                                </span>
+
+
+                                            {% else %}
+
+                                                <span class="admin-account-status inactive">
+                                                    Inactive
+                                                </span>
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- ================================= -->
+                                        <!-- DATE JOINED -->
+                                        <!-- ================================= -->
+
+                                        <td>
+
+                                            <span class="admin-policyholder-date">
+                                                {{ policyholder.date_joined|date:"d M Y" }}
+                                            </span>
+
+                                        </td>
+
+
+
+                                        <!-- ================================= -->
+                                        <!-- POLICIES -->
+                                        <!-- ================================= -->
+
+                                        <td>
+
+                                            {% if policyholder.policy_count > 0 %}
+
+                                                <div class="admin-count-cell">
+
+                                                    <strong>
+                                                        {{ policyholder.policy_count }}
+                                                    </strong>
+
+                                                    <span>
+                                                        Polic{{ policyholder.policy_count|pluralize:"y,ies" }}
+                                                    </span>
+
+                                                </div>
+
+                                            {% else %}
+
+                                                <span class="admin-muted-cell">
+                                                    No policies
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+
+                                        <!-- ================================= -->
+                                        <!-- CLAIMS -->
+                                        <!-- ================================= -->
+
+                                        <td>
+
+                                            {% if policyholder.claim_count > 0 %}
+
+                                                <div class="admin-count-cell">
+
+                                                    <strong>
+                                                        {{ policyholder.claim_count }}
+                                                    </strong>
+
+                                                    <span>
+                                                        Claim{{ policyholder.claim_count|pluralize }}
+                                                    </span>
+
+                                                </div>
+
+                                            {% else %}
+
+                                                <span class="admin-muted-cell">
+                                                    0
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+
+
+                                        <!-- ================================= -->
+                                        <!-- ACTION -->
+                                        <!-- ================================= -->
+
+                                        <td>
+
+                                            <a
+                                                href="/admin-policyholder/{{ policyholder.id }}/"
+                                                class="view-link admin-view-policyholder"
+                                            >
+                                                View Details →
+                                            </a>
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- ================================================= -->
+                    <!-- EMPTY STATE -->
+                    <!-- ================================================= -->
+
+                    <div class="admin-policyholder-empty">
+
+                        <div class="admin-policyholder-empty-icon">
+                            ◯
+                        </div>
+
+                        <h3>
+                            No Policyholders Found
+                        </h3>
+
+                        <p>
+                            There are currently no registered
+                            policyholder accounts in the system.
+                        </p>
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+</body>
+
+</html>

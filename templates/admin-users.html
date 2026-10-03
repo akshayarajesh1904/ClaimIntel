@@ -1,0 +1,365 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Users</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+</head>
+
+
+<body>
+
+
+    <!-- Header -->
+
+    <header class="dashboard-header">
+
+        <h2>
+            🛡 ClaimIntel
+        </h2>
+
+        <div>
+
+            <span>
+                Welcome, {{ user.email }}
+            </span>
+
+            <a href="/logout/">
+                Logout
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- Layout -->
+
+    <div class="dashboard-container">
+
+
+        <!-- Sidebar -->
+
+        <aside class="sidebar">
+
+            <a href="/admin-dashboard/">
+                Dashboard
+            </a>
+
+            <a
+                href="/admin-users/"
+                class="active"
+            >
+                Users
+            </a>
+
+        
+            <a href="/admin-insurance-plans/">
+    Insurance Plans
+</a>
+
+            <a href="/admin-claims/">
+                Claims
+            </a>
+
+            <a href="/admin-reports/">
+                Reports
+            </a>
+
+            <a href="/logout/" class="sidebar-logout">
+    Logout
+</a>
+
+        </aside>
+
+
+
+        <!-- Main -->
+
+        <main class="dashboard-main">
+
+
+            <h1>
+                Users
+            </h1>
+
+            <p class="dashboard-subtitle">
+                View and manage registered users.
+            </p>
+
+
+
+            <!-- User Statistics -->
+
+            <div class="stats">
+
+
+                <div class="stat-card">
+
+                    <h3>
+                        {{ total_users }}
+                    </h3>
+
+                    <p>
+                        Total Users
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3>
+                        {{ active_users }}
+                    </h3>
+
+                    <p>
+                        Active Users
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3>
+                        {{ inactive_users }}
+                    </h3>
+
+                    <p>
+                        Inactive Users
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- Search -->
+
+            <div class="claims-section">
+
+                <h2>
+                    Search Users
+                </h2>
+
+
+                <input
+                    type="text"
+                    id="userSearch"
+                    placeholder="Search by User ID, username or email..."
+                    onkeyup="searchUsers()"
+                    style="
+                        width: 100%;
+                        padding: 12px;
+                        border: 1px solid #d9e2ec;
+                        border-radius: 6px;
+                    "
+                >
+
+            </div>
+
+
+
+            <!-- Users Table -->
+
+            <div class="claims-section">
+
+                <h2>
+                    Registered Users
+                </h2>
+
+
+                <table id="usersTable">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                User ID
+                            </th>
+
+                            <th>
+                                Username
+                            </th>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th>
+                                Account Type
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for user_item in users %}
+
+                        <tr>
+
+
+                            <!-- User ID -->
+
+                            <td>
+
+                                USR{{ user_item.id|stringformat:"03d" }}
+
+                            </td>
+
+
+
+                            <!-- Username -->
+
+                            <td>
+
+                                {{ user_item.username }}
+
+                            </td>
+
+
+
+                            <!-- Email -->
+
+                            <td>
+
+                                {{ user_item.email }}
+
+                            </td>
+
+
+
+                            <!-- Account Type -->
+
+                            <td>
+
+                                {% if user_item.userprofile.role == 'policyholder' %}
+
+                                    Policyholder
+
+                                {% elif user_item.userprofile.role == 'officer' %}
+
+                                    Claim Officer
+
+                                {% elif user_item.userprofile.role == 'admin' %}
+
+                                    Administrator
+
+                                {% else %}
+
+                                    Unknown
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <!-- Status -->
+
+                            <td>
+
+                                {% if user_item.is_active %}
+
+                                    <span class="status approved">
+                                        Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status pending">
+                                        Inactive
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                style="
+                                    text-align: center;
+                                    padding: 30px;
+                                "
+                            >
+                                No users found.
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+
+                <!-- No Search Results -->
+
+                <p
+                    id="noUserResults"
+                    style="
+                        display: none;
+                        text-align: center;
+                        padding: 20px;
+                        color: #718096;
+                    "
+                >
+                    No users found.
+                </p>
+
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+
+
+    <!-- JavaScript -->
+
+    <script src="{% static 'js/app.js' %}"></script>
+
+
+</body>
+
+</html>

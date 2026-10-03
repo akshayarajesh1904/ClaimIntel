@@ -1,0 +1,667 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Create Account</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+    <style>
+        .field-error {
+            display: block;
+            margin-top: 5px;
+            font-size: 13px;
+        }
+
+        .field-error.error {
+            color: #c53030;
+        }
+
+        .field-error.success {
+            color: #2f855a;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="register-page">
+
+    <div class="register-container">
+
+        <div class="register-header">
+
+            <div class="register-logo">
+                🛡 ClaimIntel
+            </div>
+
+            <h1>
+                Create Your Account
+            </h1>
+
+            <p>
+                Register as a policyholder to manage your
+                insurance policies and claims.
+            </p>
+
+        </div>
+
+
+        {% if error %}
+
+            <div class="register-error">
+                {{ error }}
+            </div>
+
+        {% endif %}
+
+
+        <form
+            method="POST"
+            action="/register/"
+            id="registerForm"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="register-section">
+
+                <h2>
+                    Personal Information
+                </h2>
+
+
+                <div class="register-grid">
+
+                    <div>
+
+                        <label for="first_name">
+                            First Name *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="first_name"
+                            name="first_name"
+                            placeholder="Enter first name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="last_name">
+                            Last Name *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="last_name"
+                            name="last_name"
+                            placeholder="Enter last name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="email">
+                            Email Address *
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="example@gmail.com"
+                            required
+                            autocomplete="email"
+                            pattern="^[A-Za-z0-9._%+-]+@+gmail+\.[A-Za-z]{2,}$"
+                        >
+
+                        <small
+                            id="emailError"
+                            class="field-error"
+                        ></small>
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="phone_number">
+                            Phone Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="phone_number"
+                            name="phone_number"
+                            placeholder="Enter 10-digit phone number"
+                            maxlength="10"
+                            minlength="10"
+                            pattern="[6-9][0-9]{9}"
+                            inputmode="numeric"
+                            required
+                        >
+
+                        <small
+                            id="phoneError"
+                            class="field-error"
+                        ></small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="register-section">
+
+                <h2>
+                    Driver Information
+                </h2>
+
+
+                <div class="register-grid">
+
+                    <div>
+
+                        <label for="driver_license_number">
+                            Driving License Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="driver_license_number"
+                            name="driver_license_number"
+                            placeholder="Enter driving license number"
+                            maxlength="15"
+                            required
+                        >
+
+                        <small
+                            id="licenseError"
+                            class="field-error"
+                        ></small>
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="address">
+                            Residential Address
+                        </label>
+
+                        <textarea
+                            id="address"
+                            name="address"
+                            rows="3"
+                            placeholder="Enter residential address"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="register-section">
+
+                <h2>
+                    Account Information
+                </h2>
+
+
+                <div class="register-grid">
+
+                    <div>
+
+                        <label for="username">
+                            Username *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Choose a username"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="password">
+                            Password *
+                        </label>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Create a password"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="confirm_password">
+                            Confirm Password *
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Confirm your password"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="register-submit">
+
+                <button
+                    type="submit"
+                    id="createAccountBtn"
+                >
+                    Create Account
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+        <div class="register-login">
+
+            Already have an account?
+
+            <a href="/login/">
+                Login here
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const registerForm =
+        document.getElementById('registerForm');
+
+    const emailField =
+        document.getElementById('email');
+
+    const phoneField =
+        document.getElementById('phone_number');
+
+    const licenseField =
+        document.getElementById('driver_license_number');
+
+    const emailError =
+        document.getElementById('emailError');
+
+    const phoneError =
+        document.getElementById('phoneError');
+
+    const licenseError =
+        document.getElementById('licenseError');
+
+    const createAccountBtn =
+        document.getElementById('createAccountBtn');
+
+
+    function getCookie(name) {
+
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== '') {
+
+            const cookies =
+                document.cookie.split(';');
+
+            for (let cookie of cookies) {
+
+                cookie = cookie.trim();
+
+                if (cookie.startsWith(name + '=')) {
+
+                    cookieValue =
+                        decodeURIComponent(
+                            cookie.substring(name.length + 1)
+                        );
+
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
+
+
+    const csrftoken =
+        getCookie('csrftoken');
+
+
+    const validationState = {
+        email: false,
+        phone_number: false,
+        driver_license_number: false
+    };
+
+
+    function showMessage(element, message, valid) {
+
+        element.textContent = message;
+
+        element.classList.remove(
+            'error',
+            'success'
+        );
+
+        if (message) {
+            element.classList.add(
+                valid ? 'success' : 'error'
+            );
+        }
+    }
+
+
+    function updateSubmitButton() {
+
+        const email =
+            emailField.value.trim();
+
+        const phone =
+            phoneField.value.trim();
+
+        const license =
+            licenseField.value.trim();
+
+        createAccountBtn.disabled = !(
+            validationState.email &&
+            validationState.phone_number &&
+            validationState.driver_license_number &&
+            email &&
+            phone &&
+            license
+        );
+    }
+
+
+    async function validateField(fieldName, value, messageElement) {
+
+        const formData =
+            new FormData();
+
+        formData.append(
+            'validate_field',
+            fieldName
+        );
+
+        formData.append(
+            'value',
+            value
+        );
+
+        try {
+
+            const response =
+                await fetch(
+                    '/register/',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        },
+                        body: formData
+                    }
+                );
+
+            const data =
+                await response.json();
+
+            validationState[fieldName] =
+                data.valid === true;
+
+            showMessage(
+                messageElement,
+                data.message || '',
+                data.valid === true
+            );
+
+        } catch (error) {
+
+            validationState[fieldName] = false;
+
+            showMessage(
+                messageElement,
+                'Unable to check this field. Please try again.',
+                false
+            );
+        }
+
+        updateSubmitButton();
+    }
+
+
+    function setupValidation(field, fieldName, messageElement, shouldCheck) {
+
+        let timer = null;
+
+        field.addEventListener('input', function () {
+
+            const value =
+                field.value.trim();
+
+            validationState[fieldName] = false;
+
+            clearTimeout(timer);
+
+            if (!value) {
+
+                showMessage(
+                    messageElement,
+                    '',
+                    false
+                );
+
+                updateSubmitButton();
+                return;
+            }
+
+            const localResult =
+                shouldCheck(value);
+
+            if (localResult.message) {
+
+                showMessage(
+                    messageElement,
+                    localResult.message,
+                    false
+                );
+
+                updateSubmitButton();
+                return;
+            }
+
+            showMessage(
+                messageElement,
+                'Checking...',
+                false
+            );
+
+            timer = setTimeout(function () {
+
+                validateField(
+                    fieldName,
+                    value,
+                    messageElement
+                );
+
+            }, 350);
+        });
+
+
+        field.addEventListener('blur', function () {
+
+            const value =
+                field.value.trim();
+
+            if (!value) {
+                return;
+            }
+
+            const localResult =
+                shouldCheck(value);
+
+            if (!localResult.message) {
+
+                validateField(
+                    fieldName,
+                    value,
+                    messageElement
+                );
+            }
+        });
+    }
+
+
+    setupValidation(
+        emailField,
+        'email',
+        emailError,
+        function (value) {
+
+            const emailPattern =
+                /^[A-Za-z0-9._%+-]+@+gmail+\.[A-Za-z]{2,}$/;
+
+            if (!emailPattern.test(value)) {
+                return {
+                    message: 'Please enter a valid email address.'
+                };
+            }
+
+            return { message: '' };
+        }
+    );
+
+
+    setupValidation(
+        phoneField,
+        'phone_number',
+        phoneError,
+        function (value) {
+
+            if (!/^[0-9]*$/.test(value)) {
+                return {
+                    message: 'Phone number can contain only digits.'
+                };
+            }
+
+            if (value.length < 10) {
+                return {
+                    message: 'Phone number must contain 10 digits.'
+                };
+            }
+
+            if (!/^[6-9][0-9]{9}$/.test(value)) {
+                return {
+                    message: 'Phone number must start with 6-9.'
+                };
+            }
+
+            if (/^(\d)\1{9}$/.test(value)) {
+                return {
+                    message: 'Please enter a valid phone number.'
+                };
+            }
+
+            return { message: '' };
+        }
+    );
+
+
+    setupValidation(
+        licenseField,
+        'driver_license_number',
+        licenseError,
+        function (value) {
+
+            const licensePattern =
+                /^[A-Za-z]{2}[0-9]{2}[0-9]{4,11}$/;
+
+            if (!licensePattern.test(value)) {
+                return {
+                    message:
+                        'Enter a valid driving license number.'
+                };
+            }
+
+            return { message: '' };
+        }
+    );
+
+
+    registerForm.addEventListener(
+        'submit',
+        function (event) {
+
+            updateSubmitButton();
+
+            if (createAccountBtn.disabled) {
+                event.preventDefault();
+            }
+        }
+    );
+
+
+    updateSubmitButton();
+
+</script>
+
+</body>
+
+</html>

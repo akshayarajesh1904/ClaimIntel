@@ -1,0 +1,963 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        ClaimIntel - My Claims
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Welcome, {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ========================================================= -->
+<!-- LAYOUT -->
+<!-- ========================================================= -->
+
+<div class="dashboard-container">
+
+
+    <!-- ===================================================== -->
+    <!-- SIDEBAR -->
+    <!-- ===================================================== -->
+
+    <aside class="sidebar">
+
+        <a href="/dashboard/">
+
+            <span class="sidebar-icon">
+                ⌂
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+        <a
+            href="/my-claims/"
+            class="active"
+        >
+
+            <span class="sidebar-icon">
+                ▣
+            </span>
+
+            <span>
+                My Claims
+            </span>
+
+        </a>
+
+        {% if not has_policy %}
+        <a href="/available-policies/">
+
+            <span class="sidebar-icon">
+                ▤
+            </span>
+
+            <span>
+                Register New Policy
+            </span>
+
+        </a>
+        {% endif %}
+
+
+        <a href="/submit-claim/">
+
+            <span class="sidebar-icon">
+                +
+            </span>
+
+            <span>
+                Submit Claim
+            </span>
+
+        </a>
+
+
+        <a href="/profile/">
+
+            <span class="sidebar-icon">
+                ◯
+            </span>
+
+            <span>
+                Profile
+            </span>
+
+        </a>
+
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+
+            <span class="sidebar-icon">
+                ↪
+            </span>
+
+            <span>
+                Logout
+            </span>
+
+        </a>
+
+    </aside>
+
+
+
+    <!-- ===================================================== -->
+    <!-- MAIN CONTENT -->
+    <!-- ===================================================== -->
+
+    <main class="dashboard-main my-claims-page">
+
+
+        <!-- ================================================= -->
+        <!-- PAGE HEADER -->
+        <!-- ================================================= -->
+
+        <div class="my-claims-header">
+
+            <div>
+
+                <div class="my-claims-eyebrow">
+                    POLICY & CLAIMS
+                </div>
+
+                <h1>
+                    My Insurance Policies & Claims
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    View your registered policies and track
+                    the progress of your insurance claims.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- SUMMARY CARDS -->
+        <!-- ================================================= -->
+
+        <div class="my-claims-summary-grid">
+
+
+            <div class="my-claims-summary-card">
+
+                <div class="my-claims-summary-icon blue">
+                    ▤
+                </div>
+
+                <div>
+
+                    <span>
+                        Registered Policies
+                    </span>
+
+                    <strong>
+                        {{ policies|length }}
+                    </strong>
+
+                    <small>
+                        Policies linked to your account
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="my-claims-summary-card">
+
+                <div class="my-claims-summary-icon purple">
+                    ▧
+                </div>
+
+                <div>
+
+                    <span>
+                        Total Claims
+                    </span>
+
+                    <strong>
+                        {{ claims|length }}
+                    </strong>
+
+                    <small>
+                        Claims submitted by you
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="my-claims-summary-card action">
+
+                <div class="my-claims-summary-icon green">
+                    +
+                </div>
+
+                <div>
+
+                    <span>
+                        Need to Report Damage?
+                    </span>
+
+                    <strong class="my-claims-action-title">
+                        Submit a Claim
+                    </strong>
+
+                    <small>
+                        Start a new claim for an active policy
+                    </small>
+
+                </div>
+
+                <a
+                    href="/submit-claim/"
+                    class="my-claims-summary-action"
+                >
+                    →
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- REGISTERED POLICIES -->
+        <!-- ================================================= -->
+
+        <div class="my-claims-section-card">
+
+
+            <div class="my-claims-section-heading">
+
+                <div class="my-claims-section-icon blue">
+                    ▤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Registered Policies
+                    </h2>
+
+                    <p>
+                        These are the insurance policies registered
+                        to your account.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="my-claims-table-wrapper">
+
+                <table class="my-claims-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Policy
+                            </th>
+
+                            <th>
+                                Vehicle
+                            </th>
+
+                            <th>
+                                Registration
+                            </th>
+
+                            <th>
+                                Coverage
+                            </th>
+
+                            <th>
+                                Insured Value
+                            </th>
+
+                            <th>
+                                Validity
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for policy in policies %}
+
+                        <tr>
+
+
+                            <td>
+
+                                <div class="my-claims-primary-cell">
+
+                                    <div class="my-claims-row-icon blue">
+                                        #
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ policy.policy_number }}
+                                        </strong>
+
+                                        <small>
+                                            Policy
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <td>
+
+                                <div class="my-claims-vehicle-cell">
+
+                                    <strong>
+                                        {{ policy.vehicle_make }}
+                                        {{ policy.vehicle_model }}
+                                    </strong>
+
+                                    {% if policy.vehicle_year %}
+
+                                        <small>
+                                            {{ policy.vehicle_year }}
+                                        </small>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+
+
+                            <td>
+                                {{ policy.registration_number }}
+                            </td>
+
+
+
+                            <td>
+
+                                <span class="my-claims-type-badge">
+                                    {{ policy.coverage_type }}
+                                </span>
+
+                            </td>
+
+
+
+                            <td>
+
+                                {% if policy.insured_value %}
+
+                                    <strong class="my-claims-money">
+                                        ₹{{ policy.insured_value }}
+                                    </strong>
+
+                                {% else %}
+
+                                    <span class="my-claims-muted">
+                                        Not specified
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <td>
+
+                                <div class="my-claims-validity">
+
+                                    <span>
+                                        {{ policy.start_date|date:"d M Y" }}
+                                    </span>
+
+                                    <small>
+                                        to
+                                    </small>
+
+                                    <span>
+                                        {{ policy.end_date|date:"d M Y" }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <td>
+
+                                {% if policy.status == 'active' %}
+
+                                    <span class="status approved">
+                                        Active
+                                    </span>
+
+                                {% elif policy.status == 'expired' %}
+
+                                    <span class="status rejected">
+                                        Expired
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="my-claims-policy-status">
+                                        {{ policy.get_status_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <td>
+
+                                {% if policy.status == 'active' %}
+
+                                    <a
+                                        href="/submit-claim/?policy={{ policy.id }}"
+                                        class="my-claims-action-button"
+                                    >
+                                        Submit Claim →
+                                    </a>
+
+                                {% else %}
+
+                                    <span class="my-claims-not-available">
+                                        Not Available
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                class="my-claims-empty-cell"
+                            >
+
+                                <div class="my-claims-empty-state">
+
+                                    <div class="my-claims-empty-icon">
+                                        ▤
+                                    </div>
+
+                                    <h3>
+                                        No Registered Policies
+                                    </h3>
+
+                                    <p>
+                                        No insurance policies are currently
+                                        registered to your account.
+                                    </p>
+
+                                    <a
+                                        href="/available-policies/"
+                                        class="my-claims-empty-button"
+                                    >
+                                        Register a Policy
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- MY CLAIMS -->
+        <!-- ================================================= -->
+
+        <div class="my-claims-section-card">
+
+
+            <div class="my-claims-section-heading">
+
+                <div class="my-claims-section-icon purple">
+                    ▧
+                </div>
+
+                <div>
+
+                    <h2>
+                        My Claims & Status Tracking
+                    </h2>
+
+                    <p>
+                        Track the current status of every claim
+                        submitted under your policies.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="my-claims-count-strip">
+
+                <span>
+                    Claims on your account
+                </span>
+
+                <strong>
+                    {{ claims|length }}
+                </strong>
+
+            </div>
+
+
+
+            <div class="my-claims-table-wrapper">
+
+                <table class="my-claims-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Claim
+                            </th>
+
+                            <th>
+                                Policy
+                            </th>
+
+                            <th>
+                                Vehicle
+                            </th>
+
+                            <th>
+                                Incident Date
+                            </th>
+
+                            <th>
+                                Claim Amount
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for claim in claims %}
+
+                        <tr>
+
+
+                            <td>
+
+                                <div class="my-claims-primary-cell">
+
+                                    <div class="my-claims-row-icon purple">
+                                        #
+                                    </div>
+
+                                    <div>
+
+                                        <strong>
+                                            {{ claim.claim_id }}
+                                        </strong>
+
+                                        <small>
+                                            Claim ID
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <td>
+
+                                {% if claim.policy %}
+
+                                    {{ claim.policy.policy_number }}
+
+                                {% else %}
+
+                                    {{ claim.policy_number }}
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <td>
+
+                                <div class="my-claims-vehicle-cell">
+
+                                    <strong>
+                                        {{ claim.vehicle_make }}
+                                        {{ claim.vehicle_model }}
+                                    </strong>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <td>
+                                {{ claim.incident_date|date:"d M Y" }}
+                            </td>
+
+
+
+                            <td>
+
+                                {% if claim.claim_amount %}
+
+                                    <strong class="my-claims-money">
+                                        ₹{{ claim.claim_amount }}
+                                    </strong>
+
+                                {% else %}
+
+                                    <span class="my-claims-muted">
+                                        Not specified
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <td>
+
+                                {% if claim.status == 'under_review' %}
+
+                                    <span class="status pending">
+                                        Under Review
+                                    </span>
+
+                                {% elif claim.status == 'approved' %}
+
+                                    <span class="status approved">
+                                        Approved
+                                    </span>
+
+                                {% elif claim.status == 'rejected' %}
+
+                                    <span class="status rejected">
+                                        Rejected
+                                    </span>
+
+                                {% elif claim.status == 'investigation' %}
+
+                                    <span class="status investigation">
+                                        Investigation Required
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="my-claims-policy-status">
+                                        {{ claim.get_status_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <td>
+
+                                <a
+                                    href="/claim-details/{{ claim.claim_id }}/"
+                                    class="my-claims-view-button"
+                                >
+                                    View →
+                                </a>
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% empty %}
+
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="my-claims-empty-cell"
+                            >
+
+                                <div class="my-claims-empty-state">
+
+                                    <div class="my-claims-empty-icon purple">
+                                        ▧
+                                    </div>
+
+                                    <h3>
+                                        No Claims Submitted
+                                    </h3>
+
+                                    <p>
+                                        You have not submitted any
+                                        insurance claims yet.
+                                    </p>
+
+                                    <a
+                                        href="/submit-claim/"
+                                        class="my-claims-empty-button"
+                                    >
+                                        Submit Your First Claim
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ================================================= -->
+        <!-- STATUS INFORMATION -->
+        <!-- ================================================= -->
+
+        <div class="my-claims-status-card">
+
+
+            <div class="my-claims-status-heading">
+
+                <div class="my-claims-status-icon">
+                    ℹ
+                </div>
+
+                <div>
+
+                    <h2>
+                        Claim Status Information
+                    </h2>
+
+                    <p>
+                        Understand what each claim status means.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="my-claims-status-grid">
+
+
+                <div class="my-claims-status-item">
+
+                    <span class="status pending">
+                        Under Review
+                    </span>
+
+                    <p>
+                        Your claim has been submitted and is
+                        awaiting review.
+                    </p>
+
+                </div>
+
+
+
+                <div class="my-claims-status-item">
+
+                    <span class="status approved">
+                        Approved
+                    </span>
+
+                    <p>
+                        Your claim has been approved by a
+                        claim officer.
+                    </p>
+
+                </div>
+
+
+
+                <div class="my-claims-status-item">
+
+                    <span class="status rejected">
+                        Rejected
+                    </span>
+
+                    <p>
+                        Your claim has been rejected after review.
+                    </p>
+
+                </div>
+
+
+
+                <div class="my-claims-status-item">
+
+                    <span class="status investigation">
+                        Investigation Required
+                    </span>
+
+                    <p>
+                        Additional investigation or verification
+                        is required before a final decision.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+
+</body>
+
+</html>

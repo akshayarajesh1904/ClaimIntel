@@ -1,0 +1,793 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ClaimIntel - Policyholder Details</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}?v=2"
+    >
+
+</head>
+
+<body>
+
+<header class="dashboard-header">
+
+    <h2>
+        🛡 ClaimIntel
+    </h2>
+
+    <div>
+
+        <span>
+            Administrator: {{ user.email }}
+        </span>
+
+        <a href="/logout/">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+
+        <a href="/admin-dashboard/">
+            <span class="sidebar-icon">▣</span>
+            Dashboard
+        </a>
+
+        <a
+            href="/admin-policyholders/"
+            class="active"
+        >
+            <span class="sidebar-icon">♙</span>
+            Policyholders
+        </a>
+
+        <a href="/admin-officers/">
+            <span class="sidebar-icon">♙</span>
+            Insurance Officers
+        </a>
+
+        <a href="/admin-insurance-plans/">
+            <span class="sidebar-icon">▤</span>
+            Insurance Plans
+        </a>
+
+        <a href="/admin-claims/">
+            <span class="sidebar-icon">▧</span>
+            Claims
+        </a>
+
+        <a href="/admin-reports/">
+            <span class="sidebar-icon">◫</span>
+            Reports
+        </a>
+
+        <a href="/profile/">
+            <span class="sidebar-icon">⚙</span>
+            Profile
+        </a>
+
+        <a
+            href="/logout/"
+            class="sidebar-logout"
+        >
+            <span class="sidebar-icon">↪</span>
+            Logout
+        </a>
+
+    </aside>
+
+
+    <main class="dashboard-main admin-policyholder-detail-page">
+
+        <div class="admin-detail-header">
+
+            <div>
+
+                <div class="admin-detail-eyebrow">
+                    POLICYHOLDER DETAILS
+                </div>
+
+                <h1>
+                    Policyholder Details
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    View customer information, registered policies,
+                    and claim history.
+                </p>
+
+            </div>
+
+            <a
+                href="/admin-policyholders/"
+                class="admin-detail-back-button"
+            >
+                ← Back to Policyholders
+            </a>
+
+        </div>
+
+
+        <!-- CUSTOMER INFORMATION -->
+
+        <div class="admin-detail-section-card">
+
+            <div class="admin-detail-section-heading">
+
+                <div class="admin-detail-section-icon blue">
+                    ♙
+                </div>
+
+                <div>
+
+                    <h2>
+                        Customer Information
+                    </h2>
+
+                    <p>
+                        Basic account information for this policyholder.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-customer-info-grid">
+
+                <div class="admin-customer-info-card">
+
+                    <div class="admin-customer-info-icon">
+                        ♙
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Customer
+                        </span>
+
+                        <strong>
+
+                            {% if policyholder.get_full_name %}
+
+                                {{ policyholder.get_full_name }}
+
+                            {% else %}
+
+                                Policyholder
+
+                            {% endif %}
+
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-customer-info-card">
+
+                    <div class="admin-customer-info-icon">
+                        @
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Email
+                        </span>
+
+                        <strong>
+                            {{ policyholder.email }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-customer-info-card">
+
+                    <div class="admin-customer-info-icon">
+                        ●
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Account Status
+                        </span>
+
+                        {% if policyholder.is_active %}
+
+                            <strong>
+                                <span class="admin-detail-status active">
+                                    Active
+                                </span>
+                            </strong>
+
+                        {% else %}
+
+                            <strong>
+                                <span class="admin-detail-status inactive">
+                                    Inactive
+                                </span>
+                            </strong>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-customer-info-card">
+
+                    <div class="admin-customer-info-icon">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <span>
+                            Date Joined
+                        </span>
+
+                        <strong>
+                            {{ policyholder.date_joined|date:"d M Y" }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INSURANCE POLICIES -->
+
+        <div class="admin-detail-section-card">
+
+            <div class="admin-detail-section-heading">
+
+                <div class="admin-detail-section-icon purple">
+                    ▤
+                </div>
+
+                <div>
+
+                    <h2>
+                        Insurance Policies
+                    </h2>
+
+                    <p>
+                        Policies registered by this policyholder.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if policies %}
+
+                <div class="admin-detail-table-wrapper">
+
+                    <table class="admin-detail-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Policy</th>
+                                <th>Plan</th>
+                                <th>Vehicle</th>
+                                <th>Registration</th>
+                                <th>Coverage</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Status</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for policy in policies %}
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="admin-detail-primary-cell">
+
+                                        <span class="admin-detail-row-icon">
+                                            #
+                                        </span>
+
+                                        <div>
+
+                                            <strong>
+                                                {{ policy.policy_number }}
+                                            </strong>
+
+                                            <small>
+                                                Policy
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if policy.insurance_plan %}
+
+                                        {{ policy.insurance_plan.name }}
+
+                                    {% else %}
+
+                                        {{ policy.coverage_type }}
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="admin-detail-vehicle-cell">
+
+                                        <strong>
+                                            {{ policy.vehicle_make }}
+                                            {{ policy.vehicle_model }}
+                                        </strong>
+
+                                        {% if policy.vehicle_year %}
+
+                                            <small>
+                                                {{ policy.vehicle_year }}
+                                            </small>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+                                    {{ policy.registration_number }}
+                                </td>
+
+
+                                <td>
+                                    {{ policy.coverage_type }}
+                                </td>
+
+
+                                <td>
+                                    {{ policy.start_date|date:"d M Y" }}
+                                </td>
+
+
+                                <td>
+                                    {{ policy.end_date|date:"d M Y" }}
+                                </td>
+
+
+                                <td>
+
+                                    {% if policy.status == 'active' %}
+
+                                        <span class="admin-detail-status active">
+                                            Active
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="admin-detail-status inactive">
+                                            {{ policy.status|title }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="admin-detail-empty-state">
+
+                    <div class="admin-detail-empty-icon">
+                        ▤
+                    </div>
+
+                    <h3>
+                        No Insurance Policies
+                    </h3>
+
+                    <p>
+                        This customer has not registered
+                        any insurance policies yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- CLAIM HISTORY -->
+
+        <div class="admin-detail-section-card">
+
+            <div class="admin-detail-section-heading">
+
+                <div class="admin-detail-section-icon orange">
+                    ▧
+                </div>
+
+                <div>
+
+                    <h2>
+                        Claim History
+                    </h2>
+
+                    <p>
+                        Claims submitted by this policyholder.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {% if claims %}
+
+                <div class="admin-detail-table-wrapper">
+
+                    <table class="admin-detail-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Claim</th>
+                                <th>Policy</th>
+                                <th>Vehicle</th>
+                                <th>Incident Date</th>
+                                <th>Claim Amount</th>
+                                <th>Risk</th>
+                                <th>Status</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for claim in claims %}
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="admin-detail-primary-cell">
+
+                                        <span class="admin-detail-row-icon">
+                                            #
+                                        </span>
+
+                                        <div>
+
+                                            <strong>
+                                                {{ claim.claim_id }}
+                                            </strong>
+
+                                            <small>
+                                                Claim
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+                                    {{ claim.policy_number }}
+                                </td>
+
+
+                                <td>
+
+                                    <div class="admin-detail-vehicle-cell">
+
+                                        <strong>
+                                            {{ claim.vehicle_make }}
+                                            {{ claim.vehicle_model }}
+                                        </strong>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+                                    {{ claim.incident_date|date:"d M Y" }}
+                                </td>
+
+
+                                <td>
+
+                                    {% if claim.claim_amount %}
+
+                                        ₹{{ claim.claim_amount }}
+
+                                    {% else %}
+
+                                        <span class="admin-detail-muted">
+                                            Not specified
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if claim.risk_level == 'high' %}
+
+                                        <span class="admin-detail-risk high">
+                                            High
+                                        </span>
+
+                                    {% elif claim.risk_level == 'medium' %}
+
+                                        <span class="admin-detail-risk medium">
+                                            Medium
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="admin-detail-risk low">
+                                            Low
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <td>
+
+                                    {% if claim.status == 'under_review' %}
+
+                                        <span class="status pending">
+                                            Under Review
+                                        </span>
+
+                                    {% elif claim.status == 'approved' %}
+
+                                        <span class="status approved">
+                                            Approved
+                                        </span>
+
+                                    {% elif claim.status == 'rejected' %}
+
+                                        <span class="status rejected">
+                                            Rejected
+                                        </span>
+
+                                    {% elif claim.status == 'investigation' %}
+
+                                        <span class="status investigation">
+                                            Investigation
+                                        </span>
+
+                                    {% else %}
+
+                                        {{ claim.status|title }}
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="admin-detail-empty-state">
+
+                    <div class="admin-detail-empty-icon">
+                        ▧
+                    </div>
+
+                    <h3>
+                        No Claims Found
+                    </h3>
+
+                    <p>
+                        This customer has not submitted
+                        any claims yet.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- CUSTOMER SUMMARY -->
+
+        <div class="admin-detail-summary-card">
+
+            <div class="admin-detail-section-heading">
+
+                <div class="admin-detail-section-icon green">
+                    ✓
+                </div>
+
+                <div>
+
+                    <h2>
+                        Customer Summary
+                    </h2>
+
+                    <p>
+                        Overall policy and claim activity.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-detail-summary-grid">
+
+                <div class="admin-detail-summary-item">
+
+                    <div class="admin-detail-summary-icon blue">
+                        ▤
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ policies|length }}
+                        </strong>
+
+                        <span>
+                            Total Policies
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-detail-summary-item">
+
+                    <div class="admin-detail-summary-icon purple">
+                        ▧
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ claims|length }}
+                        </strong>
+
+                        <span>
+                            Total Claims
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-detail-summary-item">
+
+                    <div class="admin-detail-summary-icon green">
+                        ✓
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ approved_claims }}
+                        </strong>
+
+                        <span>
+                            Approved Claims
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="admin-detail-summary-item">
+
+                    <div class="admin-detail-summary-icon orange">
+                        ◷
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ pending_claims }}
+                        </strong>
+
+                        <span>
+                            Pending Claims
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>
