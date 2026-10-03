@@ -5,8 +5,6 @@ venv/
 __pycache__/
 *.pyc
 
-# Django database
-db.sqlite3
 
 # Local/tool files
 .freebuff/
